@@ -15,7 +15,7 @@
 
 #ifndef __BYTEBOOL__
 #define __BYTEBOOL__
-typedef enum {false, true} boolean;
+typedef enum { false, true } boolean;
 typedef unsigned char byte;
 #endif
 
@@ -26,8 +26,7 @@ typedef unsigned char byte;
 //--------------------------------------------------------------------------
 
 // lump order in a map wad
-enum
-{
+enum {
 	ML_LABEL,
 	ML_THINGS,
 	ML_LINEDEFS,
@@ -42,14 +41,12 @@ enum
 	ML_BEHAVIOR
 };
 
-typedef struct
-{
+typedef struct {
 	short x;
 	short y;
 } mapvertex_t;
 
-typedef struct
-{
+typedef struct {
 	short textureoffset;
 	short rowoffset;
 	char toptexture[8];
@@ -58,8 +55,7 @@ typedef struct
 	short sector; // on viewer's side
 } mapsidedef_t;
 
-typedef struct
-{
+typedef struct {
 	short v1;
 	short v2;
 	short flags;
@@ -72,30 +68,29 @@ typedef struct
 	short sidenum[2]; // sidenum[1] will be -1 if one sided
 } maplinedef_t;
 
-#define	ML_BLOCKING			0x0001
-#define	ML_BLOCKMONSTERS	0x0002
-#define	ML_TWOSIDED			0x0004
-#define	ML_DONTPEGTOP		0x0008
-#define	ML_DONTPEGBOTTOM	0x0010
-#define ML_SECRET			0x0020	// don't map as two sided: IT'S A SECRET!
-#define ML_SOUNDBLOCK		0x0040	// don't let sound cross two of these
-#define	ML_DONTDRAW			0x0080	// don't draw on the automap
-#define	ML_MAPPED			0x0100	// set if already drawn in automap
-#define ML_REPEAT_SPECIAL	0x0200	// special is repeatable
-#define ML_SPAC_SHIFT		10
-#define ML_SPAC_MASK		0x1c00
-#define GET_SPAC(flags) ((flags&ML_SPAC_MASK)>>ML_SPAC_SHIFT)
+#define ML_BLOCKING 0x0001
+#define ML_BLOCKMONSTERS 0x0002
+#define ML_TWOSIDED 0x0004
+#define ML_DONTPEGTOP 0x0008
+#define ML_DONTPEGBOTTOM 0x0010
+#define ML_SECRET 0x0020 // don't map as two sided: IT'S A SECRET!
+#define ML_SOUNDBLOCK 0x0040 // don't let sound cross two of these
+#define ML_DONTDRAW 0x0080 // don't draw on the automap
+#define ML_MAPPED 0x0100 // set if already drawn in automap
+#define ML_REPEAT_SPECIAL 0x0200 // special is repeatable
+#define ML_SPAC_SHIFT 10
+#define ML_SPAC_MASK 0x1c00
+#define GET_SPAC(flags) ((flags & ML_SPAC_MASK) >> ML_SPAC_SHIFT)
 
 // Special activation types
-#define SPAC_CROSS		0	// when player crosses line
-#define SPAC_USE		1	// when player uses line
-#define SPAC_MCROSS		2	// when monster crosses line
-#define SPAC_IMPACT		3	// when projectile hits line
-#define SPAC_PUSH		4	// when player/monster pushes line
-#define SPAC_PCROSS		5	// when projectile crosses line
+#define SPAC_CROSS 0 // when player crosses line
+#define SPAC_USE 1 // when player uses line
+#define SPAC_MCROSS 2 // when monster crosses line
+#define SPAC_IMPACT 3 // when projectile hits line
+#define SPAC_PUSH 4 // when player/monster pushes line
+#define SPAC_PCROSS 5 // when projectile crosses line
 
-typedef	struct
-{
+typedef struct {
 	short floorheight;
 	short ceilingheight;
 	char floorpic[8];
@@ -105,14 +100,12 @@ typedef	struct
 	short tag;
 } mapsector_t;
 
-typedef struct
-{
+typedef struct {
 	short numsegs;
 	short firstseg; // segs are stored sequentially
 } mapsubsector_t;
 
-typedef struct
-{
+typedef struct {
 	short v1;
 	short v2;
 	short angle;
@@ -121,24 +114,21 @@ typedef struct
 	short offset;
 } mapseg_t;
 
-enum
-{ // bbox coordinates
+enum { // bbox coordinates
 	BOXTOP,
 	BOXBOTTOM,
 	BOXLEFT,
 	BOXRIGHT
 };
 
-#define	NF_SUBSECTOR	0x8000
-typedef struct
-{
-	short		x,y,dx,dy;			// partition line
-	short		bbox[2][4];			// bounding box for each child
-	unsigned short	children[2];		// if NF_SUBSECTOR its a subsector
+#define NF_SUBSECTOR 0x8000
+typedef struct {
+	short x, y, dx, dy; // partition line
+	short bbox[2][4]; // bounding box for each child
+	unsigned short children[2]; // if NF_SUBSECTOR its a subsector
 } mapnode_t;
 
-typedef struct
-{
+typedef struct {
 	short tid;
 	short x;
 	short y;
@@ -154,17 +144,17 @@ typedef struct
 	byte arg5;
 } mapthing_t;
 
-#define MTF_EASY		1
-#define MTF_NORMAL		2
-#define MTF_HARD		4
-#define MTF_AMBUSH		8
-#define MTF_DORMANT		16
-#define MTF_FIGHTER		32
-#define MTF_CLERIC		64
-#define MTF_MAGE		128
-#define MTF_GSINGLE		256
-#define MTF_GCOOP		512
-#define MTF_GDEATHMATCH	1024
+#define MTF_EASY 1
+#define MTF_NORMAL 2
+#define MTF_HARD 4
+#define MTF_AMBUSH 8
+#define MTF_DORMANT 16
+#define MTF_FIGHTER 32
+#define MTF_CLERIC 64
+#define MTF_MAGE 128
+#define MTF_GSINGLE 256
+#define MTF_GCOOP 512
+#define MTF_GDEATHMATCH 1024
 
 //--------------------------------------------------------------------------
 //
@@ -172,24 +162,22 @@ typedef struct
 //
 //--------------------------------------------------------------------------
 
-typedef struct
-{
-	short	originx;
-	short	originy;
-	short	patch;
-	short	stepdir;
-	short	colormap;
+typedef struct {
+	short originx;
+	short originy;
+	short patch;
+	short stepdir;
+	short colormap;
 } mappatch_t;
 
-typedef struct
-{
-	char		name[8];
-	boolean		masked;	
-	short		width;
-	short		height;
-	void		**columndirectory;	// OBSOLETE
-	short		patchcount;
-	mappatch_t	patches[1];
+typedef struct {
+	char name[8];
+	boolean masked;
+	short width;
+	short height;
+	void **columndirectory; // OBSOLETE
+	short patchcount;
+	mappatch_t patches[1];
 } maptexture_t;
 
 //--------------------------------------------------------------------------
@@ -199,33 +187,30 @@ typedef struct
 //--------------------------------------------------------------------------
 
 // posts are runs of non masked source pixels
-typedef struct
-{
-	byte		topdelta;		// -1 is the last post in a column
-	byte		length;
-// length data bytes follows
+typedef struct {
+	byte topdelta; // -1 is the last post in a column
+	byte length;
+	// length data bytes follows
 } post_t;
 
 // column_t is a list of 0 or more post_t, (byte)-1 terminated
-typedef post_t	column_t;
+typedef post_t column_t;
 
 // a patch holds one or more columns
 // patches are used for sprites and all masked pictures
-typedef struct
-{
-	short		width;				// bounding box size
-	short		height;
-	short		leftoffset;			// pixels to the left of origin
-	short		topoffset;			// pixels below the origin
-	int			columnofs[8];		// only [width] used
-									// the [0] is &columnofs[width]
+typedef struct {
+	short width; // bounding box size
+	short height;
+	short leftoffset; // pixels to the left of origin
+	short topoffset; // pixels below the origin
+	int columnofs[8]; // only [width] used
+		// the [0] is &columnofs[width]
 } patch_t;
 
 // a pic is an unmasked block of pixels
-typedef struct
-{
-	byte		width,height;
-	byte		data;
+typedef struct {
+	byte width, height;
+	byte data;
 } pic_t;
 
 #endif // __XDDEFS__

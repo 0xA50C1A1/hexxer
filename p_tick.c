@@ -49,22 +49,18 @@ void P_Ticker(void)
 {
 	int i;
 
-	if(paused)
-	{
+	if (paused) {
 		return;
 	}
-	for(i = 0; i < MAXPLAYERS; i++)
-	{
-		if(playeringame[i])
-		{
+	for (i = 0; i < MAXPLAYERS; i++) {
+		if (playeringame[i]) {
 			P_PlayerThink(&players[i]);
 		}
 	}
-	if(TimerGame)
-	{
-		if(!--TimerGame)
-		{
-			G_Completed(P_TranslateMap(P_GetMapNextMap(gamemap)), 0);
+	if (TimerGame) {
+		if (!--TimerGame) {
+			G_Completed(P_TranslateMap(P_GetMapNextMap(gamemap)),
+				    0);
 		}
 	}
 	RunThinkers();
@@ -84,16 +80,13 @@ static void RunThinkers(void)
 	thinker_t *currentthinker;
 
 	currentthinker = thinkercap.next;
-	while(currentthinker != &thinkercap)
-	{
-		if(currentthinker->function == (think_t)-1)
-		{ // Time to remove it
+	while (currentthinker != &thinkercap) {
+		if (currentthinker->function ==
+		    (think_t)-1) { // Time to remove it
 			currentthinker->next->prev = currentthinker->prev;
 			currentthinker->prev->next = currentthinker->next;
 			Z_Free(currentthinker);
-		}
-		else if(currentthinker->function)
-		{
+		} else if (currentthinker->function) {
 			currentthinker->function(currentthinker);
 		}
 		currentthinker = currentthinker->next;
@@ -108,7 +101,7 @@ static void RunThinkers(void)
 
 void P_InitThinkers(void)
 {
-	thinkercap.prev = thinkercap.next  = &thinkercap;
+	thinkercap.prev = thinkercap.next = &thinkercap;
 }
 
 //==========================================================================

@@ -54,8 +54,7 @@ musicinfo_t S_music[] =
 
 // Sound info
 
-sfxinfo_t S_sfx[] =
-{
+sfxinfo_t S_sfx[] = {
 	// tagname, lumpname, priority, usefulness, snd_ptr, lumpnum, numchannels,
 	//		pitchshift
 	{ "", "", 0, -1, NULL, 0, 0, 0 },
@@ -137,10 +136,10 @@ sfxinfo_t S_sfx[] =
 	{ "MageLightningZap", "", 32, -1, NULL, 0, 2, 1 },
 	{ "MageLightningContinuous", "", 32, -1, NULL, 0, 2, 1 },
 	{ "MageLightningReady", "", 30, -1, NULL, 0, 2, 1 },
-	{ "MageShardsFire","", 80, -1, NULL, 0, 2, 1 },
-	{ "MageShardsExplode","", 36, -1, NULL, 0, 2, 1 },
-	{ "MageStaffFire","", 80, -1, NULL, 0, 2, 1 },
-	{ "MageStaffExplode","", 40, -1, NULL, 0, 2, 1 },
+	{ "MageShardsFire", "", 80, -1, NULL, 0, 2, 1 },
+	{ "MageShardsExplode", "", 36, -1, NULL, 0, 2, 1 },
+	{ "MageStaffFire", "", 80, -1, NULL, 0, 2, 1 },
+	{ "MageStaffExplode", "", 40, -1, NULL, 0, 2, 1 },
 	{ "Switch1", "", 32, -1, NULL, 0, 2, 1 },
 	{ "Switch2", "", 32, -1, NULL, 0, 2, 1 },
 	{ "SerpentSight", "", 32, -1, NULL, 0, 2, 1 },

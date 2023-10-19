@@ -17,20 +17,21 @@
 
 // a line drawing of the player pointing right, starting from the middle.
 
-#define R ((8*PLAYERRADIUS)/7)
+#define R ((8 * PLAYERRADIUS) / 7)
 
 mline_t player_arrow[] = {
-  { { -R+R/4, 0 }, { 0, 0} }, // center line.
-  { { -R+R/4, R/8 }, { R, 0} }, // blade
-  { { -R+R/4, -R/8 }, { R, 0 } },
-  { { -R+R/4, -R/4 }, { -R+R/4, R/4 } }, // crosspiece
-  { { -R+R/8, -R/4 }, { -R+R/8, R/4 } },
-  { { -R+R/8, -R/4 }, { -R+R/4, -R/4} }, //crosspiece connectors
-  { { -R+R/8, R/4 }, { -R+R/4, R/4} },
-  { { -R-R/4, R/8 }, { -R-R/4, -R/8 } }, //pommel
-  { { -R-R/4, R/8 }, { -R+R/8, R/8 } },
-  { { -R-R/4, -R/8}, { -R+R/8, -R/8 } }
-  };
+	{ { -R + R / 4, 0 }, { 0, 0 } }, // center line.
+	{ { -R + R / 4, R / 8 }, { R, 0 } }, // blade
+	{ { -R + R / 4, -R / 8 }, { R, 0 } },
+	{ { -R + R / 4, -R / 4 }, { -R + R / 4, R / 4 } }, // crosspiece
+	{ { -R + R / 8, -R / 4 }, { -R + R / 8, R / 4 } },
+	{ { -R + R / 8, -R / 4 },
+	  { -R + R / 4, -R / 4 } }, //crosspiece connectors
+	{ { -R + R / 8, R / 4 }, { -R + R / 4, R / 4 } },
+	{ { -R - R / 4, R / 8 }, { -R - R / 4, -R / 8 } }, //pommel
+	{ { -R - R / 4, R / 8 }, { -R + R / 8, R / 8 } },
+	{ { -R - R / 4, -R / 8 }, { -R + R / 8, -R / 8 } }
+};
 
 /*
 mline_t keysquare[] = {
@@ -56,8 +57,8 @@ mline_t keysquare[] = {
   };
 */
 #undef R
-#define NUMPLYRLINES (sizeof(player_arrow)/sizeof(mline_t))
-#define NUMKEYSQUARELINES (sizeof(keysquare)/sizeof(mline_t))
+#define NUMPLYRLINES (sizeof(player_arrow) / sizeof(mline_t))
+#define NUMKEYSQUARELINES (sizeof(keysquare) / sizeof(mline_t))
 
 /*
 #define R ((8*PLAYERRADIUS)/7)
@@ -83,7 +84,6 @@ mline_t cheat_player_arrow[] = {
 #define NUMCHEATPLYRLINES (sizeof(cheat_player_arrow)/sizeof(mline_t))
 */
 
-
 /*
 #define R (FRACUNIT)
 mline_t triangle_guy[] = {
@@ -96,12 +96,10 @@ mline_t triangle_guy[] = {
 */
 
 #define R (FRACUNIT)
-mline_t thintriangle_guy[] = {
-  { { -.5*R, -.7*R }, { R, 0 } },
-  { { R, 0 }, { -.5*R, .7*R } },
-  { { -.5*R, .7*R }, { -.5*R, -.7*R } }
-  };
+mline_t thintriangle_guy[] = { { { -.5 * R, -.7 * R }, { R, 0 } },
+			       { { R, 0 }, { -.5 * R, .7 * R } },
+			       { { -.5 * R, .7 * R }, { -.5 * R, -.7 * R } } };
 #undef R
-#define NUMTHINTRIANGLEGUYLINES (sizeof(thintriangle_guy)/sizeof(mline_t))
+#define NUMTHINTRIANGLEGUYLINES (sizeof(thintriangle_guy) / sizeof(mline_t))
 
 #endif

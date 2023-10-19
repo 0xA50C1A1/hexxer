@@ -13,14 +13,12 @@
 #ifndef __SOUNDSTH__
 #define __SOUNDSTH__
 
-typedef struct
-{
+typedef struct {
 	char name[8];
 	int p1;
 } musicinfo_t;
 
-typedef struct sfxinfo_s
-{
+typedef struct sfxinfo_s {
 	char tagName[32];
 	char lumpname[12]; // Only need 9 bytes, but padded out to be dword aligned
 	//struct sfxinfo_s *link; // Make alias for another sound
@@ -29,11 +27,10 @@ typedef struct sfxinfo_s
 	void *snd_ptr;
 	int lumpnum;
 	int numchannels; // total number of channels a sound type may occupy
-	boolean	changePitch;
+	boolean changePitch;
 } sfxinfo_t;
 
-typedef struct
-{
+typedef struct {
 	mobj_t *mo;
 	int sound_id;
 	int handle;
@@ -42,8 +39,7 @@ typedef struct
 	int priority;
 } channel_t;
 
-typedef struct
-{
+typedef struct {
 	long id;
 	unsigned short priority;
 	char *name;
@@ -51,8 +47,7 @@ typedef struct
 	int distance;
 } ChanInfo_t;
 
-typedef struct
-{
+typedef struct {
 	int channelCount;
 	int musicVolume;
 	int soundVolume;
