@@ -15,7 +15,7 @@
 #include "p_local.h" // for P_AproxDistance
 #include "sounds.h"
 #include "i_sound.h"
-#include "soundst.h"
+#include <s_sound.h>
 #include "st_start.h"
 #include "dmx.h"
 #include "dpmiapi.h"

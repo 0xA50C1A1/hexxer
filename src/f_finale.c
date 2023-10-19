@@ -13,7 +13,7 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2def.h"
-#include "soundst.h"
+#include <s_sound.h>
 #include "p_local.h"
 #include <ctype.h>
 
