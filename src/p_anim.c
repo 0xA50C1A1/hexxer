@@ -15,6 +15,7 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <i_system.h>
+#include <m_random.h>
 
 // MACROS ------------------------------------------------------------------
 

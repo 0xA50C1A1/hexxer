@@ -14,6 +14,7 @@
 #include "p_local.h"
 #include <s_sound.h>
 #include <i_system.h>
+#include <m_random.h>
 
 static void CheckForPushSpecial(line_t *line, int side, mobj_t *mobj);
 
@@ -2119,8 +2120,8 @@ boolean PIT_ChangeSector(mobj_t *thing)
 			mo = P_SpawnMobj(thing->x, thing->y,
 					 thing->z + thing->height / 2,
 					 MT_BLOOD);
-			mo->momx = (P_Random() - P_Random()) << 12;
-			mo->momy = (P_Random() - P_Random()) << 12;
+			mo->momx = P_SubRandom() << 12;
+			mo->momy = P_SubRandom() << 12;
 		}
 	}
 

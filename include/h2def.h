@@ -287,9 +287,6 @@ typedef struct {
 	fixed_t x, y, z;
 } degenmobj_t;
 
-// Most damage defined using HITDICE
-#define HITDICE(a) ((1 + (P_Random() & 7)) * a)
-
 //
 // frame flags
 //
@@ -1082,17 +1079,6 @@ void M_ExtractFileBase(char *path, char *dest);
 
 void M_ForceUppercase(char *text);
 // Changes a string to uppercase
-
-int M_Random(void);
-// returns a number from 0 to 255
-
-extern unsigned char rndtable[256];
-extern int prndindex;
-#define P_Random() rndtable[(++prndindex) & 0xff]
-// as M_Random, but used only by the play simulation
-
-void M_ClearRandom(void);
-// fix randoms for demos
 
 void M_FindResponseFile(void);
 

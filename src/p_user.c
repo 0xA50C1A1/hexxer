@@ -15,6 +15,7 @@
 #include <s_sound.h>
 #include <i_video.h>
 #include <i_system.h>
+#include <m_random.h>
 
 void P_PlayerNextArtifact(player_t *player);
 

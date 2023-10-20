@@ -13,6 +13,7 @@
 #include <math.h>
 #include "h2def.h"
 #include "r_local.h"
+#include <m_random.h>
 
 int viewangleoffset;
 
