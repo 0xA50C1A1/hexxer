@@ -955,8 +955,6 @@ void I_EndRead(void);
 byte *I_AllocLow(int length);
 // allocates from low memory under dos, just mallocs under unix
 
-void I_Tactile(int on, int off, int total);
-
 #ifdef __WATCOMC__
 extern boolean useexterndriver;
 
