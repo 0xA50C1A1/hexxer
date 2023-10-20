@@ -11,10 +11,11 @@
 //**************************************************************************
 
 #include "h2def.h"
+#include <i_system.h>
 
 #define SC_INDEX 0x3c4
 
-byte *screen;
+byte *screen = NULL;
 int dirtybox[4];
 int usegamma;
 
@@ -329,16 +330,4 @@ void V_DrawShadowedPatch(int x, int y, patch_t *patch)
 void V_DrawRawScreen(byte *raw)
 {
 	memcpy(screen, raw, SCREENWIDTH * SCREENHEIGHT);
-}
-
-//---------------------------------------------------------------------------
-//
-// PROC V_Init
-//
-//---------------------------------------------------------------------------
-
-void V_Init(void)
-{
-	// I_AllocLow will put screen in low dos memory on PCs.
-	screen = I_AllocLow(SCREENWIDTH * SCREENHEIGHT);
 }

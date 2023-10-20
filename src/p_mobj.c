@@ -16,6 +16,7 @@
 #include "p_local.h"
 #include "sounds.h"
 #include <s_sound.h>
+#include <i_system.h>
 
 // MACROS ------------------------------------------------------------------
 

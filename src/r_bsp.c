@@ -12,6 +12,7 @@
 
 #include "h2def.h"
 #include "r_local.h"
+#include <i_system.h>
 
 seg_t *curline;
 side_t *sidedef;

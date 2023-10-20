@@ -10,9 +10,11 @@
 //**
 //**************************************************************************
 
+#include <SDL2/SDL_stdinc.h>
 #include "h2def.h"
 #include "p_local.h"
 #include <s_sound.h>
+#include <i_system.h>
 
 #define BONUSADD 6
 
@@ -63,7 +65,7 @@ void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 	} else {
 		strcpy(player->message, message);
 	}
-	strupr(player->message);
+	SDL_strupr(player->message);
 	player->messageTics = MESSAGETICS;
 	player->yellowMessage = false;
 	if (ultmsg) {

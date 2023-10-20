@@ -12,7 +12,6 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#include <dos.h>
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +19,8 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <s_sound.h>
+#include <i_system.h>
+#include <i_video.h>
 
 // MACROS ------------------------------------------------------------------
 
@@ -114,11 +115,9 @@ static int WarpMap;
 static int demosequence;
 static int pagetic;
 static char *pagename;
-#ifdef __NeXT__
-static char *wadfiles[MAXWADFILES] = { "/Novell/H2/source/hexen.wad" };
-#else
+
 static char *wadfiles[MAXWADFILES] = { "hexen.wad" };
-#endif
+
 static execOpt_t ExecOptions[] = {
 	{ "-file", ExecOptionFILE, 1, 0 },
 	{ "-scripts", ExecOptionSCRIPTS, 1, 0 },
@@ -154,9 +153,6 @@ void H2_Main(void)
 	HandleArgs();
 
 	// Initialize subsystems
-
-	ST_Message("V_Init: allocate screens.\n");
-	V_Init();
 
 	// Load defaults before initing other systems
 	ST_Message("M_LoadDefaults: Load system defaults.\n");
@@ -286,9 +282,6 @@ static void HandleArgs(void)
 			opt->func(&myargv[p], opt->tag);
 		}
 	}
-
-	// Look for an external device driver
-	I_CheckExternDriver();
 }
 
 //==========================================================================
@@ -765,20 +758,6 @@ static void AddWADFile(char *file)
 	new = malloc(strlen(file) + 1);
 	strcpy(new, file);
 	wadfiles[i] = new;
-}
-
-//==========================================================================
-//
-// FixedDiv
-//
-//==========================================================================
-
-fixed_t FixedDiv(fixed_t a, fixed_t b)
-{
-	if ((abs(a) >> 14) >= abs(b)) {
-		return ((a ^ b) < 0 ? MININT : MAXINT);
-	}
-	return (FixedDiv2(a, b));
 }
 
 //==========================================================================

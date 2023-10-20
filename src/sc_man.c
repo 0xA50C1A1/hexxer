@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "h2def.h"
+#include <i_system.h>
 
 // MACROS ------------------------------------------------------------------
 

@@ -15,6 +15,7 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <s_sound.h>
+#include <i_video.h>
 
 // MACROS ------------------------------------------------------------------
 

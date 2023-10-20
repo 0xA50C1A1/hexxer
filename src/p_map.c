@@ -13,6 +13,7 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <s_sound.h>
+#include <i_system.h>
 
 static void CheckForPushSpecial(line_t *line, int side, mobj_t *mobj);
 

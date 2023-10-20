@@ -12,11 +12,13 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include <SDL2/SDL_stdinc.h>
 #include <malloc.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <h2def.h>
+#include <i_system.h>
 
 // MACROS ------------------------------------------------------------------
 
@@ -62,18 +64,6 @@ static int AuxiliaryHandle = 0;
 boolean AuxiliaryOpened = false;
 
 // CODE --------------------------------------------------------------------
-
-//==========================================================================
-//
-// strupr
-//
-//==========================================================================
-
-void strupr(char *s)
-{
-	while (*s)
-		*s++ = toupper(*s);
-}
 
 //==========================================================================
 //
@@ -379,7 +369,7 @@ int W_CheckNumForName(char *name)
 	// Make the name into two integers for easy compares
 	strncpy(name8, name, 8);
 	name8[8] = 0; // in case the name was a full 8 chars
-	strupr(name8); // case insensitive
+	SDL_strupr(name8); // case insensitive
 	v1 = *(int *)name8;
 	v2 = *(int *)&name8[4];
 

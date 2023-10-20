@@ -13,6 +13,8 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <s_sound.h>
+#include <i_video.h>
+#include <i_system.h>
 
 void P_PlayerNextArtifact(player_t *player);
 

@@ -14,6 +14,7 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <s_sound.h>
+#include <i_system.h>
 
 #define AM_STARTKEY 9
 
@@ -696,7 +697,7 @@ void G_Ticker(void)
 			G_DoPlayDemo();
 			break;
 		case ga_screenshot:
-			M_ScreenShot();
+			//M_ScreenShot();
 			gameaction = ga_nothing;
 			break;
 		case ga_leavemap:

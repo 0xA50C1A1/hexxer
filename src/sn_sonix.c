@@ -15,6 +15,7 @@
 #include <string.h>
 #include "h2def.h"
 #include <s_sound.h>
+#include <i_system.h>
 
 // MACROS ------------------------------------------------------------------
 

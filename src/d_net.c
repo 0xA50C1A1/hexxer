@@ -15,6 +15,8 @@
 #include "h2def.h"
 #include "p_local.h"
 #include <stdlib.h> // for atoi()
+#include <i_system.h>
+#include <i_video.h>
 
 #define NCMD_EXIT 0x80000000
 #define NCMD_RETRANSMIT 0x40000000

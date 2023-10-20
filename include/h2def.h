@@ -15,16 +15,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <m_fixed.h>
 #include "st_start.h"
 
 #define VERSION 110
 #define VERSION_TEXT "v1.1"
-
-// Uncomment, to enable all timebomb stuff
-//#define TIMEBOMB
-#define TIMEBOMB_YEAR 95 // years since 1900
-#define TIMEBOMB_STARTDATE 268 // initial date (9/26)
-#define TIMEBOMB_ENDDATE 301 // end date (10/29)
 
 // if rangecheck is undefined, most parameter validation debugging code
 // will not be compiled
@@ -129,10 +124,6 @@ extern byte *destview, *destscreen; // PC direct to screen pointers
 
 #define MINIMUM_HEAP_SIZE 0x800000 //  8 meg
 #define MAXIMUM_HEAP_SIZE 0x2000000 // 32 meg
-
-#define FRACBITS 16
-#define FRACUNIT (1 << FRACBITS)
-typedef int fixed_t;
 
 typedef unsigned int uint;
 
@@ -812,10 +803,6 @@ extern boolean autostart;
 ===============================================================================
 */
 
-fixed_t FixedMul(fixed_t a, fixed_t b);
-fixed_t FixedDiv(fixed_t a, fixed_t b);
-fixed_t FixedDiv2(fixed_t a, fixed_t b);
-
 #ifdef __BIG_ENDIAN__
 short ShortSwap(short);
 long LongSwap(long);
@@ -930,8 +917,6 @@ void TryRunTics(void);
 
 void I_InitNetwork(void);
 void I_NetCmd(void);
-
-void I_CheckExternDriver(void);
 
 void I_WipeUpdate(wipe_t wipe);
 // Copy buffer to video with wipe effect
@@ -1298,7 +1283,6 @@ extern int dirtybox[4];
 extern byte gammatable[5][256];
 extern int usegamma;
 
-void V_Init(void); // Allocates buffer screens, call before R_Init
 void V_DrawPatch(int x, int y, patch_t *patch);
 void V_DrawFuzzPatch(int x, int y, patch_t *patch);
 void V_DrawAltFuzzPatch(int x, int y, patch_t *patch);

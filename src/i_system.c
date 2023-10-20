@@ -10,6 +10,7 @@
 #include <h2def.h>
 #include <i_system.h>
 #include <i_video.h>
+#include <s_sound.h>
 
 // MACROS ------------------------------------------------------------------
 
