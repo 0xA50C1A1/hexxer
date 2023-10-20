@@ -12,11 +12,8 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#ifdef __WATCOMC__
 #include <dos.h>
-#include <sys\types.h>
-#include <direct.h>
-#endif
+#include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -175,17 +172,8 @@ void H2_Main(void)
 	ST_Message("W_Init: Init WADfiles.\n");
 	W_InitMultipleFiles(wadfiles);
 
-#ifdef TIMEBOMB
-	DoTimeBomb();
-#endif
-
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();
-
-#ifdef __WATCOMC__
-	I_StartupKeyboard();
-	I_StartupJoystick();
-#endif
 
 	ST_Message("MN_Init: Init menu system.\n");
 	MN_Init();
@@ -195,18 +183,13 @@ void H2_Main(void)
 
 	InitMapMusicInfo(); // Init music fields in mapinfo
 
-#ifdef __WATCOMC__
 	ST_Message("S_InitScript\n");
 	S_InitScript();
-#endif
 
 	ST_Message("SN_InitSequenceScript: Registering sound sequences.\n");
 	SN_InitSequenceScript();
 	ST_Message("I_Init: Setting up machine state.\n");
 	I_Init();
-
-	ST_Message("ST_Init: Init startup screen.\n");
-	ST_Init();
 
 	S_StartSongName("orb", true);
 
@@ -216,9 +199,6 @@ void H2_Main(void)
 	ST_Message("R_Init: Init Hexen refresh daemon");
 	R_Init();
 	ST_Message("\n");
-
-	if (M_CheckParm("-net"))
-		ST_NetProgress(); // Console player found
 
 	ST_Message("P_Init: Init Playloop state.\n");
 	P_Init();
@@ -787,21 +767,6 @@ static void AddWADFile(char *file)
 	wadfiles[i] = new;
 }
 
-#ifdef __WATCOMC__
-/*
-void CleanExit(void)
-{
-	union REGS regs;
-
-	I_ShutdownKeyboard();
-	regs.x.eax = 0x3;
-	int386(0x10, &regs, &regs);
-	printf("Exited from HEXEN: Beyond Heretic.\n");
-	exit(1);
-}
-*/
-#endif
-
 //==========================================================================
 //
 // FixedDiv
@@ -824,51 +789,4 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 
 static void CreateSavePath(void)
 {
-	char creationPath[121];
-	int len;
-
-	if (cdrom == true) {
-		SavePath = "c:\\hexndata\\";
-	}
-	len = strlen(SavePath);
-	if (len >= 120)
-		I_Error("Save path too long\n");
-	strcpy(creationPath, SavePath);
-#ifdef __WATCOMC__
-	creationPath[len - 1] = 0;
-	mkdir(creationPath);
-#endif
 }
-
-#ifdef TIMEBOMB
-//==========================================================================
-//
-// DoTimeBomb
-//
-//==========================================================================
-
-static void DoTimeBomb(void)
-{
-#ifdef __WATCOMC__
-	time_t timeOfDay;
-	struct tm timeBuffer;
-
-	timeOfDay = time(NULL);
-	_localtime(&timeOfDay, &timeBuffer);
-	if (timeBuffer.tm_year != TIMEBOMB_YEAR ||
-	    timeBuffer.tm_yday < TIMEBOMB_STARTDATE ||
-	    timeBuffer.tm_yday > TIMEBOMB_ENDDATE) {
-		I_Error("W_InitWadfiles:  Wad file doesn't have IWAD or PWAD id\n");
-	}
-
-	printf("\n===============================================================================\n");
-	printf("                             Hexen:  Beyond Heretic\n\n");
-	printf("                           Beta -- Do Not Distribute!\n");
-	printf("                           Press any key to continue.\n");
-	printf("===============================================================================\n");
-
-	getch();
-	printf("\n");
-#endif
-}
-#endif

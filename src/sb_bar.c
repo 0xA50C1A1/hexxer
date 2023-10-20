@@ -95,10 +95,6 @@ int curpos;
 int inv_ptr;
 int ArtifactFlash;
 
-#ifndef __WATCOMC__
-boolean i_CDMusic; // in Watcom, defined in i_ibm
-#endif
-
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static byte CheatLookup[256];
@@ -1564,22 +1560,9 @@ static boolean HandleCheats(byte key)
 	boolean eat;
 
 	if (gameskill == sk_nightmare) { // Can't cheat in nightmare mode
-		return (false);
-	} else if (netgame) { // change CD track is the only cheat available in deathmatch
-		eat = false;
-		if (i_CDMusic) {
-			if (CheatAddKey(&Cheats[0], key, &eat)) {
-				Cheats[0].func(&players[consoleplayer],
-					       &Cheats[0]);
-				S_StartSound(NULL, SFX_PLATFORM_STOP);
-			}
-			if (CheatAddKey(&Cheats[1], key, &eat)) {
-				Cheats[1].func(&players[consoleplayer],
-					       &Cheats[1]);
-				S_StartSound(NULL, SFX_PLATFORM_STOP);
-			}
-		}
-		return eat;
+		return false;
+	} else if (netgame) {
+		return false;
 	}
 	if (players[consoleplayer].health <= 0) { // Dead players can't cheat
 		return (false);

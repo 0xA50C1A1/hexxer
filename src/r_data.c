@@ -377,8 +377,6 @@ void R_InitTextures(void)
 	//
 	for (i = 0; i < numtextures; i++) {
 		R_GenerateLookup(i);
-		if (!(i & 31))
-			ST_Progress();
 	}
 
 	//
@@ -434,8 +432,6 @@ void R_InitSpriteLumps(void)
 	spritetopoffset = Z_Malloc(numspritelumps * 4, PU_STATIC, 0);
 
 	for (i = 0; i < numspritelumps; i++) {
-		if (!(i & 127))
-			ST_Progress();
 		patch = W_CacheLumpNum(firstspritelump + i, PU_CACHE);
 		spritewidth[i] = SHORT(patch->width) << FRACBITS;
 		spriteoffset[i] = SHORT(patch->leftoffset) << FRACBITS;

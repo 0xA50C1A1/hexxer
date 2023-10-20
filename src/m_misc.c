@@ -430,55 +430,9 @@ extern int snd_Channels;
 default_t defaults[] = {
 	{ "mouse_sensitivity", &mouseSensitivity, 5 },
 
-#ifndef __NeXT__
 	{ "sfx_volume", &snd_MaxVolume, 10 },
 	{ "music_volume", &snd_MusicVolume, 10 },
-#endif
 
-#ifdef __WATCOMC__
-#define SC_UPARROW 0x48
-#define SC_DOWNARROW 0x50
-#define SC_LEFTARROW 0x4b
-#define SC_RIGHTARROW 0x4d
-#define SC_RCTRL 0x1d
-#define SC_RALT 0x38
-#define SC_RSHIFT 0x36
-#define SC_SPACE 0x39
-#define SC_COMMA 0x33
-#define SC_PERIOD 0x34
-#define SC_PAGEUP 0x49
-#define SC_INSERT 0x52
-#define SC_HOME 0x47
-#define SC_PAGEDOWN 0x51
-#define SC_DELETE 0x53
-#define SC_END 0x4f
-#define SC_ENTER 0x1c
-#define SC_SLASH 0X35
-
-	{ "key_right", &key_right, SC_RIGHTARROW, 1 },
-	{ "key_left", &key_left, SC_LEFTARROW, 1 },
-	{ "key_up", &key_up, SC_UPARROW, 1 },
-	{ "key_down", &key_down, SC_DOWNARROW, 1 },
-	{ "key_strafeleft", &key_strafeleft, SC_COMMA, 1 },
-	{ "key_straferight", &key_straferight, SC_PERIOD, 1 },
-	{ "key_jump", &key_jump, SC_SLASH, 1 },
-	{ "key_flyup", &key_flyup, SC_PAGEUP, 1 },
-	{ "key_flydown", &key_flydown, SC_INSERT, 1 },
-	{ "key_flycenter", &key_flycenter, SC_HOME, 1 },
-	{ "key_lookup", &key_lookup, SC_PAGEDOWN, 1 },
-	{ "key_lookdown", &key_lookdown, SC_DELETE, 1 },
-	{ "key_lookcenter", &key_lookcenter, SC_END, 1 },
-	{ "key_invleft", &key_invleft, 0x1a, 1 },
-	{ "key_invright", &key_invright, 0x1b, 1 },
-	{ "key_useartifact", &key_useartifact, SC_ENTER, 1 },
-
-	{ "key_fire", &key_fire, SC_RCTRL, 1 },
-	{ "key_use", &key_use, SC_SPACE, 1 },
-	{ "key_strafe", &key_strafe, SC_RALT, 1 },
-	{ "key_speed", &key_speed, SC_RSHIFT, 1 },
-#endif
-
-#ifdef __NeXT__
 	{ "key_right", &key_right, KEY_RIGHTARROW },
 	{ "key_left", &key_left, KEY_LEFTARROW },
 	{ "key_up", &key_up, KEY_UPARROW },
@@ -500,7 +454,6 @@ default_t defaults[] = {
 	{ "key_use", &key_use, 'x', 1 },
 	{ "key_strafe", &key_strafe, 'c', 1 },
 	{ "key_speed", &key_speed, 'z', 1 },
-#endif
 
 	{ "use_mouse", &usemouse, 1 },
 	{ "mouseb_fire", &mousebfire, 0 },
@@ -523,13 +476,7 @@ default_t defaults[] = {
 
 	{ "usegamma", &usegamma, 0 },
 
-#ifdef __NeXT__
-#define DEFAULT_SAVEPATH "hexndata/"
-#endif
-#ifdef __WATCOMC__
-#define DEFAULT_SAVEPATH "hexndata\\"
-#endif
-	{ "savedir", (int *)&SavePath, (int)DEFAULT_SAVEPATH },
+	//	{ "savedir", (int *)&SavePath, (int)DEFAULT_SAVEPATH },
 
 	{ "messageson", (int *)&messageson, 1 },
 
@@ -667,154 +614,5 @@ void M_LoadDefaults(char *fileName)
 			*defaults[i].location = scantokey[parm];
 		}
 	}
-#endif
-}
-
-/*
-==============================================================================
-
-						SCREEN SHOTS
-
-==============================================================================
-*/
-
-typedef struct {
-	char manufacturer;
-	char version;
-	char encoding;
-	char bits_per_pixel;
-	unsigned short xmin, ymin, xmax, ymax;
-	unsigned short hres, vres;
-	unsigned char palette[48];
-	char reserved;
-	char color_planes;
-	unsigned short bytes_per_line;
-	unsigned short palette_type;
-	char filler[58];
-	unsigned char data; // unbounded
-} pcx_t;
-
-/*
-==============
-=
-= WritePCXfile
-=
-==============
-*/
-
-void WritePCXfile(char *filename, byte *data, int width, int height,
-		  byte *palette)
-{
-	int i, length;
-	pcx_t *pcx;
-	byte *pack;
-
-	pcx = Z_Malloc(width * height * 2 + 1000, PU_STATIC, NULL);
-
-	pcx->manufacturer = 0x0a; // PCX id
-	pcx->version = 5; // 256 color
-	pcx->encoding = 1; // uncompressed
-	pcx->bits_per_pixel = 8; // 256 color
-	pcx->xmin = 0;
-	pcx->ymin = 0;
-	pcx->xmax = SHORT(width - 1);
-	pcx->ymax = SHORT(height - 1);
-	pcx->hres = SHORT(width);
-	pcx->vres = SHORT(height);
-	memset(pcx->palette, 0, sizeof(pcx->palette));
-	pcx->color_planes = 1; // chunky image
-	pcx->bytes_per_line = SHORT(width);
-	pcx->palette_type = SHORT(2); // not a grey scale
-	memset(pcx->filler, 0, sizeof(pcx->filler));
-
-	//
-	// pack the image
-	//
-	pack = &pcx->data;
-
-	for (i = 0; i < width * height; i++)
-		if ((*data & 0xc0) != 0xc0)
-			*pack++ = *data++;
-		else {
-			*pack++ = 0xc1;
-			*pack++ = *data++;
-		}
-
-	//
-	// write the palette
-	//
-	*pack++ = 0x0c; // palette ID byte
-	for (i = 0; i < 768; i++)
-		*pack++ = *palette++;
-
-	//
-	// write output file
-	//
-	length = pack - (byte *)pcx;
-	M_WriteFile(filename, pcx, length);
-
-	Z_Free(pcx);
-}
-
-//==============================================================================
-
-/*
-==================
-=
-= M_ScreenShot
-=
-==================
-*/
-
-void M_ScreenShot(void)
-{
-	int i;
-	byte *linear;
-	char lbmname[12];
-	byte *pal;
-
-#ifdef _WATCOMC_
-	extern byte *pcscreen;
-#endif
-//
-// munge planar buffer to linear
-//
-#ifdef _WATCOMC_
-	linear = pcscreen;
-#else
-	linear = screen;
-#endif
-	//
-	// find a file name to save it to
-	//
-	strcpy(lbmname, "HEXEN00.pcx");
-
-	for (i = 0; i <= 99; i++) {
-		lbmname[5] = i / 10 + '0';
-		lbmname[6] = i % 10 + '0';
-		if (access(lbmname, 0) == -1)
-			break; // file doesn't exist
-	}
-	if (i == 100)
-		I_Error("M_ScreenShot: Couldn't create a PCX");
-
-//
-// save the pcx file
-//
-#ifdef __WATCOMC__
-	pal = (byte *)Z_Malloc(768, PU_STATIC, NULL);
-	outp(0x3c7, 0);
-	for (i = 0; i < 768; i++) {
-		*(pal + i) = inp(0x3c9) << 2;
-	}
-#else
-	pal = (byte *)W_CacheLumpName("PLAYPAL", PU_CACHE);
-#endif
-
-	WritePCXfile(lbmname, linear, SCREENWIDTH, SCREENHEIGHT, pal);
-
-	P_SetMessage(&players[consoleplayer], "SCREEN SHOT", false);
-#ifdef __WATCOMC__
-	Z_Free(pal);
 #endif
 }

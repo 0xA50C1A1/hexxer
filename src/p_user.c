@@ -70,7 +70,8 @@ void P_Thrust(player_t *player, angle_t angle, fixed_t move)
 =
 = P_CalcHeight
 =
-=Calculate the walking / running height adjustment
+=
+Calculate the walking / running height adjustment
 =
 ==================
 */
@@ -715,13 +716,7 @@ void P_PlayerThink(player_t *player)
 	if (player->powers[pw_flight] && netgame) {
 		if (!--player->powers[pw_flight]) {
 			if (player->mo->z != player->mo->floorz) {
-#ifdef __WATCOMC__
-				if (!useexterndriver) {
-					player->centering = true;
-				}
-#else
 				player->centering = true;
-#endif
 			}
 			player->mo->flags2 &= ~MF2_FLY;
 			player->mo->flags &= ~MF_NOGRAVITY;

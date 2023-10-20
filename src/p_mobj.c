@@ -747,13 +747,8 @@ void P_ZMovement(mobj_t *mo)
 						S_StartSound(mo,
 							     SFX_PLAYER_LAND);
 					}
-#ifdef __WATCOMC__
-					if (!useexterndriver) {
-						mo->player->centering = true;
-					}
-#else
+
 					mo->player->centering = true;
-#endif
 				}
 			} else if (mo->type >= MT_POTTERY1 &&
 				   mo->type <= MT_POTTERY3) {
@@ -937,13 +932,8 @@ static void PlayerLandedOnThing(mobj_t *mo, mobj_t *onmobj)
 	} else if (!mo->player->morphTics) {
 		S_StartSound(mo, SFX_PLAYER_LAND);
 	}
-#ifdef __WATCOMC__
-	if (!useexterndriver) {
-		mo->player->centering = true;
-	}
-#else
+
 	mo->player->centering = true;
-#endif
 }
 
 //----------------------------------------------------------------------------

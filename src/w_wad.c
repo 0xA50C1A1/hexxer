@@ -12,24 +12,15 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#ifdef NeXT
-#include <libc.h>
-#include <ctype.h>
-#else
 #include <malloc.h>
-#include <io.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#endif
-#include "h2def.h"
+#include <h2def.h>
 
 // MACROS ------------------------------------------------------------------
 
-#ifdef NeXT
-// NeXT doesn't need a binary flag in open call
 #define O_BINARY 0
-#define strcmpi strcasecmp
-#endif
 
 // TYPES -------------------------------------------------------------------
 
@@ -72,7 +63,6 @@ boolean AuxiliaryOpened = false;
 
 // CODE --------------------------------------------------------------------
 
-#ifdef NeXT
 //==========================================================================
 //
 // strupr
@@ -100,7 +90,6 @@ int filelength(int handle)
 	}
 	return fileinfo.st_size;
 }
-#endif
 
 //==========================================================================
 //
@@ -121,13 +110,12 @@ void W_AddFile(char *filename)
 	filelump_t *fileinfo, singleinfo;
 	filelump_t *freeFileInfo;
 
-	if ((handle = open(filename, O_RDONLY | O_BINARY)) ==
-	    -1) { // Didn't find file
+	if ((handle = open(filename, O_RDONLY)) == -1) { // Didn't find file
 		return;
 	}
 	startlump = numlumps;
-	if (strcmpi(filename + strlen(filename) - 3,
-		    "wad")) { // Single lump file
+	if (strcasecmp(filename + strlen(filename) - 3,
+		       "wad")) { // Single lump file
 		fileinfo = &singleinfo;
 		freeFileInfo = NULL;
 		singleinfo.filepos = 0;
@@ -249,7 +237,7 @@ void W_OpenAuxiliary(char *filename)
 	if (AuxiliaryOpened) {
 		W_CloseAuxiliary();
 	}
-	if ((handle = open(filename, O_RDONLY | O_BINARY)) == -1) {
+	if ((handle = open(filename, O_RDONLY)) == -1) {
 		I_Error("W_OpenAuxiliary: %s not found.", filename);
 		return;
 	}

@@ -228,11 +228,9 @@ static Menu_t Options2Menu = {
 static Menu_t *Menus[] = { &MainMenu,	  &ClassMenu, &SkillMenu, &OptionsMenu,
 			   &Options2Menu, &FilesMenu, &LoadMenu,  &SaveMenu };
 
-#ifdef __WATCOMC__
 static char *GammaText[] = { TXT_GAMMA_LEVEL_OFF, TXT_GAMMA_LEVEL_1,
 			     TXT_GAMMA_LEVEL_2, TXT_GAMMA_LEVEL_3,
 			     TXT_GAMMA_LEVEL_4 };
-#endif
 
 // CODE --------------------------------------------------------------------
 

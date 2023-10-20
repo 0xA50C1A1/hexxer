@@ -16,10 +16,6 @@
 
 int viewangleoffset;
 
-#ifdef __WATCOMC__
-int newViewAngleOff;
-#endif
-
 int validcount = 1; // increment every time a check is made
 
 lighttable_t *fixedcolormap;
@@ -695,11 +691,7 @@ void R_SetupFrame(player_t *player)
 
 	//drawbsp = 1;
 	viewplayer = player;
-#ifdef __WATCOMC__
-	if (newViewAngleOff) {
-		viewangleoffset = newViewAngleOff << ANGLETOFINESHIFT;
-	}
-#endif
+
 	viewangle = player->mo->angle + viewangleoffset;
 	tableAngle = viewangle >> ANGLETOFINESHIFT;
 	viewx = player->mo->x;
@@ -757,21 +749,6 @@ void R_SetupFrame(player_t *player)
 		BorderTopRefresh = false;
 		UpdateState |= I_MESSAGES;
 	}
-
-#ifdef __NeXT__
-	RD_ClearMapWindow();
-#endif
-#ifdef __WATCOMC__
-	destview = destscreen + (viewwindowx >> 2) + viewwindowy * 80;
-#endif
-
-#if 0
-{
-static int frame;
-memset (screen, frame, SCREENWIDTH*SCREENHEIGHT);
-frame++;
-}
-#endif
 }
 
 /*

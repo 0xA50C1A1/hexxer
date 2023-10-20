@@ -597,10 +597,6 @@ void P_GroupLines(void)
 =================
 */
 
-#ifdef __WATCOMC__
-extern boolean i_CDMusic;
-#endif
-
 void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 {
 	int i;
@@ -616,11 +612,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	}
 	players[consoleplayer].viewz = 1; // will be set by player think
 
-#ifdef __WATCOMC__
-	if (i_CDMusic == false) {
-		S_StartSongName("chess", true); // Waiting-for-level-load song
-	}
-#endif
+	S_StartSongName("chess", true); // Waiting-for-level-load song
 
 	Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
 

@@ -61,8 +61,6 @@ int maxsend; // BACKUPTICS/(2*ticdup)-1
 void H2_ProcessEvents(void);
 void G_BuildTiccmd(ticcmd_t *cmd);
 void H2_DoAdvanceDemo(void);
-extern void ST_NetProgress(void);
-extern void ST_NetDone(void);
 
 boolean reboundpacket;
 doomdata_t reboundstore;
@@ -526,7 +524,6 @@ void D_ArbitrateNetStart(void)
 					netbuffer->starttic & 0x3f;
 				if (!gotClass[netbuffer->player]) {
 					gotClass[netbuffer->player] = true;
-					ST_NetProgress();
 					ST_Message("\n");
 				}
 				if (netbuffer->retransmitfrom) { // that node has received info from all other nodes
@@ -567,7 +564,6 @@ void D_ArbitrateNetStart(void)
 				gotinfo[doomcom->consoleplayer] = true;
 				ST_Message(
 					"All player classes received, ready to proceed\n");
-				ST_NetDone();
 			}
 		}
 		for (i = 0; i < doomcom->numnodes;

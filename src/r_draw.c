@@ -47,9 +47,6 @@ byte *dc_source; // first pixel in a column (possibly virtual)
 
 int dccount; // just for profiling
 
-#ifndef __WATCOMC__
-#ifndef __i386
-#ifndef __m68k
 void R_DrawColumn(void)
 {
 	int count;
@@ -76,9 +73,6 @@ void R_DrawColumn(void)
 		frac += fracstep;
 	} while (count--);
 }
-#endif // __m68k
-#endif // __i386
-#endif
 
 void R_DrawColumnLow(void)
 {
@@ -117,7 +111,6 @@ FUZZOFF,-FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZ
 int fuzzpos = 0;
 */
 
-#ifndef __WATCOMC__
 void R_DrawFuzzColumn(void)
 {
 	int count;
@@ -163,7 +156,6 @@ void R_DrawFuzzColumn(void)
 		frac += fracstep;
 	} while (count--);
 }
-#endif
 
 //============================================================================
 //
@@ -362,9 +354,6 @@ byte *ds_source; // start of a 64*64 tile image
 
 int dscount; // just for profiling
 
-#ifndef __WATCOMC__
-#ifndef __i386
-#ifndef __m68k
 void R_DrawSpan(void)
 {
 	fixed_t xfrac, yfrac;
@@ -390,9 +379,6 @@ void R_DrawSpan(void)
 		yfrac += ds_ystep;
 	} while (count--);
 }
-#endif
-#endif
-#endif
 
 void R_DrawSpanLow(void)
 {
