@@ -16,10 +16,6 @@
 #include "p_local.h"
 #include <s_sound.h>
 
-#ifdef __WATCOMC__
-#include "i_sound.h" // For CD stuff
-#endif
-
 // MACROS ------------------------------------------------------------------
 
 #define CHEAT_ENCRYPT(a)                                                     \
@@ -84,22 +80,12 @@ static void CheatScriptFunc1(player_t *player, Cheat_t *cheat);
 static void CheatScriptFunc2(player_t *player, Cheat_t *cheat);
 static void CheatScriptFunc3(player_t *player, Cheat_t *cheat);
 static void CheatRevealFunc(player_t *player, Cheat_t *cheat);
-static void CheatTrackFunc1(player_t *player, Cheat_t *cheat);
-static void CheatTrackFunc2(player_t *player, Cheat_t *cheat);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
 extern byte *screen;
 extern int ArmorIncrement[NUMCLASSES][NUMARMOR];
 extern int AutoArmorSave[NUMCLASSES];
-
-#ifdef __WATCOMC__
-extern boolean i_CDMusic;
-extern int i_CDMusicLength;
-extern int i_CDTrack;
-extern int i_CDCurrentTrack;
-extern int oldTic;
-#endif
 
 // PUBLIC DATA DECLARATIONS ------------------------------------------------
 
@@ -423,8 +409,6 @@ static byte CheatTrackSeq1[] = { CHEAT_ENCRYPT('`'), 0xff, 0 };
 static byte CheatTrackSeq2[] = { CHEAT_ENCRYPT('`'), 0, 0, 0xff, 0 };
 
 static Cheat_t Cheats[] = {
-	{ CheatTrackFunc1, CheatTrackSeq1, NULL, 0, 0, 0 },
-	{ CheatTrackFunc2, CheatTrackSeq2, NULL, 0, 0, 0 },
 	{ CheatGodFunc, CheatGodSeq, NULL, 0, 0, 0 },
 	{ CheatNoClipFunc, CheatNoClipSeq, NULL, 0, 0, 0 },
 	{ CheatWeaponsFunc, CheatWeaponsSeq, NULL, 0, 0, 0 },
@@ -1929,65 +1913,4 @@ extern int cheating;
 static void CheatRevealFunc(player_t *player, Cheat_t *cheat)
 {
 	cheating = (cheating + 1) % 3;
-}
-
-//===========================================================================
-//
-// CheatTrackFunc1
-//
-//===========================================================================
-
-static void CheatTrackFunc1(player_t *player, Cheat_t *cheat)
-{
-#ifdef __WATCOMC__
-	char buffer[80];
-
-	if (!i_CDMusic) {
-		return;
-	}
-	if (I_CDMusInit() == -1) {
-		P_SetMessage(player, "ERROR INITIALIZING CD", true);
-	}
-	sprintf(buffer, "ENTER DESIRED CD TRACK (%.2d - %.2d):\n",
-		I_CDMusFirstTrack(), I_CDMusLastTrack());
-	P_SetMessage(player, buffer, true);
-#endif
-}
-
-//===========================================================================
-//
-// CheatTrackFunc2
-//
-//===========================================================================
-
-static void CheatTrackFunc2(player_t *player, Cheat_t *cheat)
-{
-#ifdef __WATCOMC__
-	char buffer[80];
-	int track;
-
-	if (!i_CDMusic) {
-		return;
-	}
-	track = (cheat->args[0] - '0') * 10 + (cheat->args[1] - '0');
-	if (track < I_CDMusFirstTrack() || track > I_CDMusLastTrack()) {
-		P_SetMessage(player, "INVALID TRACK NUMBER\n", true);
-		return;
-	}
-	if (track == i_CDCurrentTrack) {
-		return;
-	}
-	if (I_CDMusPlay(track)) {
-		sprintf(buffer, "ERROR WHILE TRYING TO PLAY CD TRACK: %.2d\n",
-			track);
-		P_SetMessage(player, buffer, true);
-	} else { // No error encountered while attempting to play the track
-		sprintf(buffer, "PLAYING TRACK: %.2d\n", track);
-		P_SetMessage(player, buffer, true);
-		i_CDMusicLength = 35 * I_CDMusTrackLength(track);
-		oldTic = gametic;
-		i_CDTrack = track;
-		i_CDCurrentTrack = track;
-	}
-#endif
 }

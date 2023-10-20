@@ -424,12 +424,7 @@ typedef struct {
 
 #ifndef __NeXT__
 extern int snd_Channels;
-extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
-extern int snd_MusicDevice, // current music card # (index to dmxCodes)
-	snd_SfxDevice; // current sfx card # (index to dmxCodes)
 
-extern int snd_SBport, snd_SBirq, snd_SBdma; // sound blaster variables
-extern int snd_Mport; // midi variables
 #endif
 
 default_t defaults[] = {
@@ -524,12 +519,6 @@ default_t defaults[] = {
 
 #ifndef __NeXT__
 	{ "snd_channels", &snd_Channels, 3 },
-	{ "snd_musicdevice", &snd_DesiredMusicDevice, 0 },
-	{ "snd_sfxdevice", &snd_DesiredSfxDevice, 0 },
-	{ "snd_sbport", &snd_SBport, 544 },
-	{ "snd_sbirq", &snd_SBirq, -1 },
-	{ "snd_sbdma", &snd_SBdma, -1 },
-	{ "snd_mport", &snd_Mport, -1 },
 #endif
 
 	{ "usegamma", &usegamma, 0 },
