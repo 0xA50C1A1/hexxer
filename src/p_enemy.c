@@ -2556,9 +2556,9 @@ static void DragonSeek(mobj_t *actor, angle_t thresh, angle_t turnMax)
 	    P_Random() < 64) { // attack the destination mobj if it's attackable
 		mobj_t *oldTarget;
 
-		if (abs(actor->angle - R_PointToAngle2(actor->x, actor->y,
-						       target->x, target->y)) <
-		    ANGLE_45 / 2) {
+		if (abs((int)actor->angle -
+			(int)R_PointToAngle2(actor->x, actor->y, target->x,
+					     target->y)) < ANGLE_45 / 2) {
 			oldTarget = actor->target;
 			actor->target = target;
 			if (P_CheckMeleeRange(actor)) {
@@ -2589,10 +2589,10 @@ static void DragonSeek(mobj_t *actor, angle_t thresh, angle_t turnMax)
 						       &search);
 				angleToSpot = R_PointToAngle2(
 					actor->x, actor->y, mo->x, mo->y);
-				if (abs(angleToSpot - angleToTarget) <
+				if (abs((int)angleToSpot - (int)angleToTarget) <
 				    bestAngle) {
-					bestAngle = abs(angleToSpot -
-							angleToTarget);
+					bestAngle = abs((int)angleToSpot -
+							(int)angleToTarget);
 					bestArg = i;
 				}
 			}
@@ -2651,11 +2651,12 @@ void A_DragonFlight(mobj_t *actor)
 		}
 		angle = R_PointToAngle2(actor->x, actor->y, actor->target->x,
 					actor->target->y);
-		if (abs(actor->angle - angle) < ANGLE_45 / 2 &&
+		if (abs((int)actor->angle - (int)angle) < ANGLE_45 / 2 &&
 		    P_CheckMeleeRange(actor)) {
 			P_DamageMobj(actor->target, actor, actor, HITDICE(8));
 			S_StartSound(actor, SFX_DRAGON_ATTACK);
-		} else if (abs(actor->angle - angle) <= ANGLE_1 * 20) {
+		} else if (abs((int)actor->angle - (int)angle) <=
+			   ANGLE_1 * 20) {
 			P_SetMobjState(actor, actor->info->missilestate);
 			S_StartSound(actor, SFX_DRAGON_ATTACK);
 		}
@@ -3592,8 +3593,8 @@ void A_SorcBallOrbit(mobj_t *actor)
 	case SORC_STOPPING: // Balls stopping
 		if ((parent->special2 == actor->type) &&
 		    (parent->args[1] > SORCBALL_SPEED_ROTATIONS) &&
-		    (abs(angle - (parent->angle >> ANGLETOFINESHIFT)) <
-		     (30 << 5))) {
+		    (abs((int)angle - (int)(parent->angle >>
+					    ANGLETOFINESHIFT)) < (30 << 5))) {
 			// Can stop now
 			actor->target->args[3] = SORC_FIRESPELL;
 			actor->target->args[4] = 0;
