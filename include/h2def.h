@@ -315,10 +315,10 @@ typedef struct {
 #define MF_SPECIAL 1 // call P_SpecialThing when touched
 #define MF_SOLID 2
 #define MF_SHOOTABLE 4
-#define MF_NOSECTOR                     \
+#define MF_NOSECTOR \
 	8 // don't use the sector links \
 		// (invisible but touchable)
-#define MF_NOBLOCKMAP                  \
+#define MF_NOBLOCKMAP \
 	16 // don't use the blocklinks \
 		// (inert but displayable)
 #define MF_AMBUSH 32
@@ -340,7 +340,7 @@ typedef struct {
 #define MF_SHADOW 0x40000 // use fuzzy draw (shadow demons / invis)
 #define MF_NOBLOOD 0x80000 // don't bleed when shot (use puff)
 #define MF_CORPSE 0x100000 // don't stop moving halfway off a step
-#define MF_INFLOAT                                         \
+#define MF_INFLOAT \
 	0x200000 // floating to a height for a move, don't \
 		// auto float to target's height
 
@@ -357,7 +357,7 @@ typedef struct {
 // --- mobj.flags2 ---
 
 #define MF2_LOGRAV 0x00000001 // alternate gravity setting
-#define MF2_WINDTHRUST                               \
+#define MF2_WINDTHRUST \
 	0x00000002 // gets pushed around by the wind \
 		// specials
 #define MF2_FLOORBOUNCE 0x00000004 // bounces off the floor
@@ -366,17 +366,17 @@ typedef struct {
 #define MF2_FLOORCLIP 0x00000020 // if feet are allowed to be clipped
 #define MF2_SPAWNFLOAT 0x00000040 // spawn random float z
 #define MF2_NOTELEPORT 0x00000080 // does not teleport
-#define MF2_RIP                                  \
+#define MF2_RIP \
 	0x00000100 // missile rips through solid \
 		// targets
-#define MF2_PUSHABLE                                \
+#define MF2_PUSHABLE \
 	0x00000200 // can be pushed by other moving \
 		// mobjs
 #define MF2_SLIDE 0x00000400 // slides against walls
-#define MF2_ONMOBJ                                      \
+#define MF2_ONMOBJ \
 	0x00000800 // mobj is resting on top of another \
 		// mobj
-#define MF2_PASSMOBJ                                   \
+#define MF2_PASSMOBJ \
 	0x00001000 // Enable z block checking.  If on, \
 		// this flag will allow the mobj to    \
 		// pass over/under other mobjs.
@@ -384,20 +384,20 @@ typedef struct {
 #define MF2_DROPPED 0x00004000 // dropped by a demon
 #define MF2_BOSS 0x00008000 // mobj is a major boss
 #define MF2_FIREDAMAGE 0x00010000 // does fire damage
-#define MF2_NODMGTHRUST                           \
+#define MF2_NODMGTHRUST \
 	0x00020000 // does not thrust target when \
 		// damaging
 #define MF2_TELESTOMP 0x00040000 // mobj can stomp another
 #define MF2_FLOATBOB 0x00080000 // use float bobbing z movement
 #define MF2_DONTDRAW 0x00100000 // don't generate a vissprite
-#define MF2_IMPACT                                    \
+#define MF2_IMPACT \
 	0x00200000 // an MF_MISSILE mobj can activate \
 		// SPAC_IMPACT
 #define MF2_PUSHWALL 0x00400000 // mobj can push walls
 #define MF2_MCROSS 0x00800000 // can activate monster cross lines
 #define MF2_PCROSS 0x01000000 // can activate projectile cross lines
 #define MF2_CANTLEAVEFLOORPIC 0x02000000 // stay within a certain floor type
-#define MF2_NONSHOOTABLE                             \
+#define MF2_NONSHOOTABLE \
 	0x04000000 // mobj is totally non-shootable, \
 		// but still considered solid
 #define MF2_INVULNERABLE 0x08000000 // mobj is invulnerable
@@ -941,59 +941,13 @@ void TryRunTics(void);
 #define SCREENHEIGHT 375
 #endif
 
-byte *I_ZoneBase(int *size);
-// called by startup code to get the ammount of memory to malloc
-// for the zone management
-
-int I_GetTime(void);
-// called by H2_GameLoop
-// returns current time in tics
-
-void I_StartFrame(void);
-// called by H2_GameLoop
-// called before processing any tics in a frame (just after displaying a frame)
-// time consuming syncronous operations are performed here (joystick reading)
-// can call H2_PostEvent
-
-void I_StartTic(void);
-// called by H2_GameLoop
-// called before processing each tic in a frame
-// quick syncronous operations are performed here
-// can call H2_PostEvent
-
-// asyncronous interrupt functions should maintain private ques that are
-// read by the syncronous functions to be converted into events
-
-void I_Init(void);
-// called by H2_Main
-// determines the hardware configuration and sets up the video mode
-
-void I_InitGraphics(void);
-
 void I_InitNetwork(void);
 void I_NetCmd(void);
 
 void I_CheckExternDriver(void);
 
-void I_Error(char *error, ...);
-// called by anything that can generate a terminal error
-// bad exit with diagnostic message
-
-void I_Quit(void);
-// called by M_Responder when quit is selected
-// clean exit, displays sell blurb
-
-void I_SetPalette(byte *palette);
-// takes full 8 bit values
-
-void I_Update(void);
-// Copy buffer to video
-
 void I_WipeUpdate(wipe_t wipe);
 // Copy buffer to video with wipe effect
-
-void I_WaitVBL(int count);
-// wait for vertical retrace or pause a bit
 
 void I_BeginRead(void);
 void I_EndRead(void);
