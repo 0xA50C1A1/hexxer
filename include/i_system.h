@@ -33,4 +33,7 @@ void I_Quit(void);
 // called by M_Responder when quit is selected
 // clean exit, displays sell blurb
 
+void ST_Message(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
+;
+
 #endif

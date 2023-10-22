@@ -159,3 +159,13 @@ void I_Quit(void)
 	printf("\nHexen: Beyond Heretic\n");
 	exit(0);
 }
+
+//==========================================================================
+//
+// ST_Message - gives debug message
+//
+//==========================================================================
+
+void ST_Message(const char *fmt, ...)
+{
+}

@@ -99,18 +99,6 @@ int EV_DoCeiling(line_t *line, byte *arg, ceiling_e type)
 	secnum = -1;
 	rtn = 0;
 
-	/* Old Ceiling stasis code
-	//
-	//      Reactivate in-stasis ceilings...for certain types.
-	//
-	switch(type)
-	{
-		case CLEV_CRUSHANDRAISE:
-			P_ActivateInStasisCeiling(line);
-		default:
-			break;
-	}
-*/
 	while ((secnum = P_FindSectorFromTag(arg[0], secnum)) >= 0) {
 		sec = &sectors[secnum];
 		if (sec->specialdata)
@@ -228,28 +216,6 @@ void P_RemoveActiveCeiling(ceiling_t *c)
 			break;
 		}
 }
-
-#if 0
-//==================================================================
-//
-//              Restart a ceiling that's in-stasis
-//
-//==================================================================
-void P_ActivateInStasisCeiling(line_t *line)
-{
-	int     i;
-
-	for (i = 0;i < MAXCEILINGS;i++)
-		if (activeceilings[i] && (activeceilings[i]->tag == line->arg1) &&
-			(activeceilings[i]->direction == 0))
-		{
-			activeceilings[i]->direction = activeceilings[i]->olddirection;
-			activeceilings[i]->thinker.function = T_MoveCeiling;
-			SN_StartSequence((mobj_t *)&activeceilings[i]->sector->soundorg,
-				SEQ_PLATFORM+activeceilings[i]->sector->seqType);
-		}
-}
-#endif
 
 //==================================================================
 //

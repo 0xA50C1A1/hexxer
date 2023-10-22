@@ -1027,41 +1027,6 @@ void P_SpawnSpecials(void)
 		case 2: // Phased light sequence start
 			P_SpawnLightSequence(sector, 1);
 			break;
-			// Specials 3 & 4 are used by the phased light sequences
-
-			/*
-			case 1:         // FLICKERING LIGHTS
-				P_SpawnLightFlash (sector);
-				break;
-			case 2:         // STROBE FAST
-				P_SpawnStrobeFlash(sector,FASTDARK,0);
-				break;
-			case 3:         // STROBE SLOW
-				P_SpawnStrobeFlash(sector,SLOWDARK,0);
-				break;
-			case 4:         // STROBE FAST/DEATH SLIME
-				P_SpawnStrobeFlash(sector,FASTDARK,0);
-				sector->special = 4;
-				break;
-			case 8:         // GLOWING LIGHT
-				P_SpawnGlowingLight(sector);
-				break;
-			case 9:         // SECRET SECTOR
-				totalsecret++;
-				break;
-			case 10:        // DOOR CLOSE IN 30 SECONDS
-				P_SpawnDoorCloseIn30 (sector);
-				break;
-			case 12:        // SYNC STROBE SLOW
-				P_SpawnStrobeFlash (sector, SLOWDARK, 1);
-				break;
-			case 13:        // SYNC STROBE FAST
-				P_SpawnStrobeFlash (sector, FASTDARK, 1);
-				break;
-			case 14:        // DOOR RAISE IN 5 MINUTES
-				P_SpawnDoorRaiseIn5Mins (sector, i);
-				break;
-			*/
 		}
 	}
 

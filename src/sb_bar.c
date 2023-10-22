@@ -42,7 +42,6 @@ void SB_PaletteFlash(boolean forceChange);
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static void DrawSoundInfo(void);
 static void DrINumber(signed int val, int x, int y);
 static void DrRedINumber(signed int val, int x, int y);
 static void DrBNumber(signed int val, int x, int y);
@@ -60,7 +59,6 @@ static void CheatNoClipFunc(player_t *player, Cheat_t *cheat);
 static void CheatWeaponsFunc(player_t *player, Cheat_t *cheat);
 static void CheatHealthFunc(player_t *player, Cheat_t *cheat);
 static void CheatKeysFunc(player_t *player, Cheat_t *cheat);
-static void CheatSoundFunc(player_t *player, Cheat_t *cheat);
 static void CheatTickerFunc(player_t *player, Cheat_t *cheat);
 static void CheatArtifactAllFunc(player_t *player, Cheat_t *cheat);
 static void CheatPuzzleFunc(player_t *player, Cheat_t *cheat);
@@ -90,7 +88,6 @@ extern int AutoArmorSave[NUMCLASSES];
 
 // PUBLIC DATA DECLARATIONS ------------------------------------------------
 
-boolean DebugSound; // Debug flag for displaying sound info
 boolean inventory;
 int curpos;
 int inv_ptr;
@@ -411,7 +408,7 @@ static Cheat_t Cheats[] = {
 	{ CheatWeaponsFunc, CheatWeaponsSeq, NULL, 0, 0, 0 },
 	{ CheatHealthFunc, CheatHealthSeq, NULL, 0, 0, 0 },
 	{ CheatKeysFunc, CheatKeysSeq, NULL, 0, 0, 0 },
-	{ CheatSoundFunc, CheatSoundSeq, NULL, 0, 0, 0 },
+
 	{ CheatTickerFunc, CheatTickerSeq, NULL, 0, 0, 0 },
 	{ CheatArtifactAllFunc, CheatArtifactAllSeq, NULL, 0, 0, 0 },
 	{ CheatPuzzleFunc, CheatPuzzleSeq, NULL, 0, 0, 0 },
@@ -714,106 +711,6 @@ static void DrSmallNumber(int val, int x, int y)
 	V_DrawPatch(x + 8, y, patch);
 }
 
-/*
-//==========================================================================
-//
-// ShadeLine
-//
-//==========================================================================
-
-static void ShadeLine(int x, int y, int height, int shade)
-{
-	byte *dest;
-	byte *shades;
-
-	shades = colormaps+9*256+shade*2*256;
-	dest = screen+y*SCREENWIDTH+x;
-	while(height--)
-	{
-		*(dest) = *(shades+*dest);
-		dest += SCREENWIDTH;
-	}
-}
-
-//==========================================================================
-//
-// ShadeChain
-//
-//==========================================================================
-
-static void ShadeChain(void)
-{
-	int i;
-
-	for(i = 0; i < 16; i++)
-	{
-		ShadeLine(277+i, 190, 10, i/2);
-		ShadeLine(19+i, 190, 10, 7-(i/2));
-	}
-}
-*/
-
-//==========================================================================
-//
-// DrawSoundInfo
-//
-// Displays sound debugging information.
-//
-//==========================================================================
-
-static void DrawSoundInfo(void)
-{
-	int i;
-	SoundInfo_t s;
-	ChanInfo_t *c;
-	char text[32];
-	int x;
-	int y;
-	int xPos[7] = { 1, 75, 112, 156, 200, 230, 260 };
-
-	if (leveltime & 16) {
-		MN_DrTextA("*** SOUND DEBUG INFO ***", xPos[0], 20);
-	}
-	S_GetChannelInfo(&s);
-	if (s.channelCount == 0) {
-		return;
-	}
-	x = 0;
-	MN_DrTextA("NAME", xPos[x++], 30);
-	MN_DrTextA("MO.T", xPos[x++], 30);
-	MN_DrTextA("MO.X", xPos[x++], 30);
-	MN_DrTextA("MO.Y", xPos[x++], 30);
-	MN_DrTextA("ID", xPos[x++], 30);
-	MN_DrTextA("PRI", xPos[x++], 30);
-	MN_DrTextA("DIST", xPos[x++], 30);
-	for (i = 0; i < s.channelCount; i++) {
-		c = &s.chan[i];
-		x = 0;
-		y = 40 + i * 10;
-		if (c->mo == NULL) { // Channel is unused
-			MN_DrTextA("------", xPos[0], y);
-			continue;
-		}
-		sprintf(text, "%s", c->name);
-		M_ForceUppercase(text);
-		MN_DrTextA(text, xPos[x++], y);
-		sprintf(text, "%d", c->mo->type);
-		MN_DrTextA(text, xPos[x++], y);
-		sprintf(text, "%d", c->mo->x >> FRACBITS);
-		MN_DrTextA(text, xPos[x++], y);
-		sprintf(text, "%d", c->mo->y >> FRACBITS);
-		MN_DrTextA(text, xPos[x++], y);
-		sprintf(text, "%d", c->id);
-		MN_DrTextA(text, xPos[x++], y);
-		sprintf(text, "%d", c->priority);
-		MN_DrTextA(text, xPos[x++], y);
-		sprintf(text, "%d", c->distance);
-		MN_DrTextA(text, xPos[x++], y);
-	}
-	UpdateState |= I_FULLSCRN;
-	BorderNeedRefresh = true;
-}
-
 //==========================================================================
 //
 // SB_Drawer
@@ -873,10 +770,6 @@ extern boolean automapactive;
 
 void SB_Drawer(void)
 {
-	// Sound info debug stuff
-	if (DebugSound == true) {
-		DrawSoundInfo();
-	}
 	CPlayer = &players[consoleplayer];
 	if (viewheight == SCREENHEIGHT && !automapactive) {
 		DrawFullScreenStuff();
@@ -1670,16 +1563,6 @@ static void CheatKeysFunc(player_t *player, Cheat_t *cheat)
 	P_SetMessage(player, TXT_CHEATKEYS, true);
 }
 
-static void CheatSoundFunc(player_t *player, Cheat_t *cheat)
-{
-	DebugSound = !DebugSound;
-	if (DebugSound) {
-		P_SetMessage(player, TXT_CHEATSOUNDON, true);
-	} else {
-		P_SetMessage(player, TXT_CHEATSOUNDOFF, true);
-	}
-}
-
 static void CheatTickerFunc(player_t *player, Cheat_t *cheat)
 {
 	extern int DisplayTicker;
@@ -1746,22 +1629,13 @@ static void CheatWarpFunc(player_t *player, Cheat_t *cheat)
 		P_SetMessage(player, TXT_CHEATBADINPUT, true);
 		return;
 	}
-	if (DevMaps) { // Search map development directory
-		sprintf(auxName, "%sMAP%02d.WAD", DevMapsDir, map);
-		fp = fopen(auxName, "rb");
-		if (fp) {
-			fclose(fp);
-		} else { // Can't find
-			P_SetMessage(player, TXT_CHEATNOMAP, true);
-			return;
-		}
-	} else { // Search primary lumps
-		sprintf(mapName, "MAP%02d", map);
-		if (W_CheckNumForName(mapName) == -1) { // Can't find
-			P_SetMessage(player, TXT_CHEATNOMAP, true);
-			return;
-		}
+
+	sprintf(mapName, "MAP%02d", map);
+	if (W_CheckNumForName(mapName) == -1) { // Can't find
+		P_SetMessage(player, TXT_CHEATNOMAP, true);
+		return;
 	}
+
 	P_SetMessage(player, TXT_CHEATWARP, true);
 	G_TeleportNewMap(map, 0);
 }

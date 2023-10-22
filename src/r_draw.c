@@ -103,15 +103,6 @@ void R_DrawColumnLow(void)
 	} while (count--);
 }
 
-/*
-#define FUZZTABLE	50
-#define FUZZOFF	(SCREENWIDTH)
-int		fuzzoffset[FUZZTABLE] = {
-FUZZOFF,-FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,-FUZZOFF,-FUZZOFF,-FUZZOFF,FUZZOFF,-FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,-FUZZOFF,-FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF,FUZZOFF,-FUZZOFF,FUZZOFF
-};
-int fuzzpos = 0;
-*/
-
 void R_DrawFuzzColumn(void)
 {
 	int count;
@@ -136,17 +127,6 @@ void R_DrawFuzzColumn(void)
 
 	fracstep = dc_iscale;
 	frac = dc_texturemid + (dc_yl - centery) * fracstep;
-
-	// OLD FUZZY INVISO SPRITE STUFF
-	/*	do
-	{
-		*dest = colormaps[6*256+dest[fuzzoffset[fuzzpos]]];
-		if (++fuzzpos == FUZZTABLE)
-			fuzzpos = 0;
-		dest += SCREENWIDTH;
-		frac += fracstep;
-	} while (count--);
-*/
 
 	do {
 		*dest = tinttable
@@ -270,43 +250,6 @@ void R_DrawTranslatedFuzzColumn(void)
 		frac += fracstep;
 	} while (count--);
 }
-
-//============================================================================
-//
-// R_DrawTranslatedAltFuzzColumn
-//
-//============================================================================
-
-/*
-void R_DrawTranslatedAltFuzzColumn (void)
-{
-	int			count;
-	byte		*dest;
-	fixed_t		frac, fracstep;	
-
-	count = dc_yh - dc_yl;
-	if (count < 0)
-		return;
-				
-#ifdef RANGECHECK
-	if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
-		I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
-#endif
-
-	dest = ylookup[dc_yl] + columnofs[dc_x];
-	
-	fracstep = dc_iscale;
-	frac = dc_texturemid + (dc_yl-centery)*fracstep;
-
-	do
-	{
-		*dest = tinttable[*dest
-			+(dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]]<<8)];
-		dest += SCREENWIDTH;
-		frac += fracstep;
-	} while (count--);
-}
-*/
 
 //--------------------------------------------------------------------------
 //

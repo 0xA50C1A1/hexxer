@@ -743,20 +743,7 @@ void P_PlayerThink(player_t *player)
 		}
 		P_PoisonDamage(player, player->poisoner, 1, true);
 	}
-	// Colormaps
-	//	if(player->powers[pw_invulnerability])
-	//	{
-	//		if(player->powers[pw_invulnerability] > BLINKTHRESHOLD
-	//			|| (player->powers[pw_invulnerability]&8))
-	//		{
-	//			player->fixedcolormap = INVERSECOLORMAP;
-	//		}
-	//		else
-	//		{
-	//			player->fixedcolormap = 0;
-	//		}
-	//	}
-	//	else
+
 	if (player->powers[pw_infrared]) {
 		if (player->powers[pw_infrared] <= BLINKTHRESHOLD) {
 			if (player->powers[pw_infrared] & 8) {

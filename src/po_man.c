@@ -1011,11 +1011,6 @@ static void InitBlockMap(void)
 		}
 		area = ((rightX >> FRACBITS) - (leftX >> FRACBITS)) *
 		       ((topY >> FRACBITS) - (bottomY >> FRACBITS));
-
-		//    fprintf(stdaux, "Area of Polyobj[%d]: %d\n", polyobjs[i].tag, area);
-		//    fprintf(stdaux, "\t[%d]\n[%d]\t\t[%d]\n\t[%d]\n", topY>>FRACBITS,
-		//    		leftX>>FRACBITS,
-		//    	rightX>>FRACBITS, bottomY>>FRACBITS);
 	}
 }
 

@@ -24,9 +24,6 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define MALLOC_CLIB 1
-#define MALLOC_ZONE 2
-
 // TYPES -------------------------------------------------------------------
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
@@ -34,8 +31,6 @@
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
-
-static int ReadFile(char const *name, byte **buffer, int mallocType);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 extern char *SavePath;
@@ -58,7 +53,7 @@ char **myargv;
 //
 //==========================================================================
 
-int M_CheckParm(char *check)
+int M_CheckParm(const char *check)
 {
 	int i;
 
@@ -79,7 +74,7 @@ int M_CheckParm(char *check)
 //
 //==========================================================================
 
-boolean M_ParmExists(char *check)
+boolean M_ParmExists(const char *check)
 {
 	return M_CheckParm(check) != 0 ? true : false;
 }
@@ -169,57 +164,34 @@ boolean M_WriteFile(char const *name, void *source, int length)
 
 int M_ReadFile(char const *name, byte **buffer)
 {
-	return ReadFile(name, buffer, MALLOC_ZONE);
-}
-
-//==========================================================================
-//
-// M_ReadFileCLib
-//
-// Read a file into a buffer allocated using malloc().
-//
-//==========================================================================
-
-int M_ReadFileCLib(char const *name, byte **buffer)
-{
-	return ReadFile(name, buffer, MALLOC_CLIB);
-}
-
-//==========================================================================
-//
-// ReadFile
-//
-//==========================================================================
-
-static int ReadFile(char const *name, byte **buffer, int mallocType)
-{
 	int handle, count, length;
 	struct stat fileinfo;
 	byte *buf;
 
 	handle = open(name, O_RDONLY | O_BINARY, 0666);
+
 	if (handle == -1) {
 		I_Error("Couldn't read file %s", name);
 	}
+
 	if (fstat(handle, &fileinfo) == -1) {
 		I_Error("Couldn't read file %s", name);
 	}
+
 	length = fileinfo.st_size;
-	if (mallocType == MALLOC_ZONE) { // Use zone memory allocation
-		buf = Z_Malloc(length, PU_STATIC, NULL);
-	} else { // Use c library memory allocation
-		buf = malloc(length);
-		if (buf == NULL) {
-			I_Error("Couldn't malloc buffer %d for file %s.",
-				length, name);
-		}
-	}
+
+	// Use zone memory allocation
+	buf = Z_Malloc(length, PU_STATIC, NULL);
+
 	count = read(handle, buf, length);
 	close(handle);
+
 	if (count < length) {
 		I_Error("Couldn't read file %s", name);
 	}
+
 	*buffer = buf;
+
 	return length;
 }
 
@@ -416,10 +388,7 @@ default_t defaults[] = {
 	{ "joyb_jump", &joybjump, -1 },
 
 	{ "screenblocks", &screenblocks, 10 },
-
-#ifndef __NeXT__
 	{ "snd_channels", &snd_Channels, 3 },
-#endif
 
 	{ "usegamma", &usegamma, 0 },
 

@@ -183,22 +183,6 @@ int EV_DoPlat(line_t *line, byte *args, plattype_e type, int amount)
 	return rtn;
 }
 
-#if 0
-void P_ActivateInStasis(int tag)
-{
-	int             i;
-
-	for (i = 0;i < MAXPLATS;i++)
-		if (activeplats[i] &&
-			(activeplats[i])->tag == tag &&
-			(activeplats[i])->status == PLAT_IN_STASIS)
-		{
-			(activeplats[i])->status = (activeplats[i])->oldstatus;
-			(activeplats[i])->thinker.function = T_PlatRaise;
-		}
-}
-#endif
-
 void EV_StopPlat(line_t *line, byte *args)
 {
 	int i;
@@ -213,22 +197,6 @@ void EV_StopPlat(line_t *line, byte *args)
 			return;
 		}
 	}
-
-	/*
-	int             j;
-
-	for (j = 0;j < MAXPLATS;j++)
-	{
-		if (activeplats[j] && ((activeplats[j])->status != PLAT_IN_STASIS) &&
-			((activeplats[j])->tag == args[0]))
-		{
-			(activeplats[j])->oldstatus = (activeplats[j])->status;
-			(activeplats[j])->status = PLAT_IN_STASIS;
-			(activeplats[j])->thinker.function = NULL;
-			SN_StopSequence((mobj_t *)&(activeplats[j])->sector->soundorg);
-		}
-	}
-*/
 }
 
 void P_AddActivePlat(plat_t *plat)

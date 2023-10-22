@@ -945,7 +945,4 @@ void R_DrawMasked(void)
 		    -(1024 << ANGLETOFINESHIFT)) { // don't draw on side views
 		R_DrawPlayerSprites();
 	}
-
-	//	if (!viewangleoffset)		// don't draw on side views
-	//		R_DrawPlayerSprites ();
 }

@@ -22,8 +22,6 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define O_BINARY 0
-
 // TYPES -------------------------------------------------------------------
 
 typedef struct {
@@ -54,15 +52,6 @@ void **lumpcache;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-static lumpinfo_t *PrimaryLumpInfo;
-static int PrimaryNumLumps;
-static void **PrimaryLumpCache;
-static lumpinfo_t *AuxiliaryLumpInfo;
-static int AuxiliaryNumLumps;
-static void **AuxiliaryLumpCache;
-static int AuxiliaryHandle = 0;
-boolean AuxiliaryOpened = false;
-
 // CODE --------------------------------------------------------------------
 
 //==========================================================================
@@ -90,7 +79,7 @@ int filelength(int handle)
 //
 //==========================================================================
 
-void W_AddFile(char *filename)
+static void W_AddFile(const char *filename)
 {
 	wadinfo_t header;
 	lumpinfo_t *lump_p;
@@ -162,7 +151,7 @@ void W_AddFile(char *filename)
 //
 //==========================================================================
 
-void W_InitMultipleFiles(char **filenames)
+void W_InitMultipleFiles(const char **filenames)
 {
 	int size;
 
@@ -184,161 +173,6 @@ void W_InitMultipleFiles(char **filenames)
 		I_Error("Couldn't allocate lumpcache");
 	}
 	memset(lumpcache, 0, size);
-
-	PrimaryLumpInfo = lumpinfo;
-	PrimaryLumpCache = lumpcache;
-	PrimaryNumLumps = numlumps;
-}
-
-//==========================================================================
-//
-// W_InitFile
-//
-// Initialize the primary from a single file.
-//
-//==========================================================================
-
-void W_InitFile(char *filename)
-{
-	char *names[2];
-
-	names[0] = filename;
-	names[1] = NULL;
-	W_InitMultipleFiles(names);
-}
-
-//==========================================================================
-//
-// W_OpenAuxiliary
-//
-//==========================================================================
-
-void W_OpenAuxiliary(char *filename)
-{
-	int i;
-	int size;
-	wadinfo_t header;
-	int handle;
-	int length;
-	filelump_t *fileinfo;
-	filelump_t *sourceLump;
-	lumpinfo_t *destLump;
-
-	if (AuxiliaryOpened) {
-		W_CloseAuxiliary();
-	}
-	if ((handle = open(filename, O_RDONLY)) == -1) {
-		I_Error("W_OpenAuxiliary: %s not found.", filename);
-		return;
-	}
-	AuxiliaryHandle = handle;
-	read(handle, &header, sizeof(header));
-	if (strncmp(header.identification, "IWAD", 4)) {
-		if (strncmp(header.identification, "PWAD", 4)) { // Bad file id
-			I_Error("Wad file %s doesn't have IWAD or PWAD id\n",
-				filename);
-		}
-	}
-	header.numlumps = LONG(header.numlumps);
-	header.infotableofs = LONG(header.infotableofs);
-	length = header.numlumps * sizeof(filelump_t);
-	fileinfo = Z_Malloc(length, PU_STATIC, 0);
-	lseek(handle, header.infotableofs, SEEK_SET);
-	read(handle, fileinfo, length);
-	numlumps = header.numlumps;
-
-	// Init the auxiliary lumpinfo array
-	lumpinfo = Z_Malloc(numlumps * sizeof(lumpinfo_t), PU_STATIC, 0);
-	sourceLump = fileinfo;
-	destLump = lumpinfo;
-	for (i = 0; i < numlumps; i++, destLump++, sourceLump++) {
-		destLump->handle = handle;
-		destLump->position = LONG(sourceLump->filepos);
-		destLump->size = LONG(sourceLump->size);
-		strncpy(destLump->name, sourceLump->name, 8);
-	}
-	Z_Free(fileinfo);
-
-	// Allocate the auxiliary lumpcache array
-	size = numlumps * sizeof(*lumpcache);
-	lumpcache = Z_Malloc(size, PU_STATIC, 0);
-	memset(lumpcache, 0, size);
-
-	AuxiliaryLumpInfo = lumpinfo;
-	AuxiliaryLumpCache = lumpcache;
-	AuxiliaryNumLumps = numlumps;
-	AuxiliaryOpened = true;
-}
-
-//==========================================================================
-//
-// W_CloseAuxiliary
-//
-//==========================================================================
-
-void W_CloseAuxiliary(void)
-{
-	int i;
-
-	if (AuxiliaryOpened) {
-		W_UseAuxiliary();
-		for (i = 0; i < numlumps; i++) {
-			if (lumpcache[i]) {
-				Z_Free(lumpcache[i]);
-			}
-		}
-		Z_Free(AuxiliaryLumpInfo);
-		Z_Free(AuxiliaryLumpCache);
-		W_CloseAuxiliaryFile();
-		AuxiliaryOpened = false;
-	}
-	W_UsePrimary();
-}
-
-//==========================================================================
-//
-// W_CloseAuxiliaryFile
-//
-// WARNING: W_CloseAuxiliary() must be called before any further
-// auxiliary lump processing.
-//
-//==========================================================================
-
-void W_CloseAuxiliaryFile(void)
-{
-	if (AuxiliaryHandle) {
-		close(AuxiliaryHandle);
-		AuxiliaryHandle = 0;
-	}
-}
-
-//==========================================================================
-//
-// W_UsePrimary
-//
-//==========================================================================
-
-void W_UsePrimary(void)
-{
-	lumpinfo = PrimaryLumpInfo;
-	numlumps = PrimaryNumLumps;
-	lumpcache = PrimaryLumpCache;
-}
-
-//==========================================================================
-//
-// W_UseAuxiliary
-//
-//==========================================================================
-
-void W_UseAuxiliary(void)
-{
-	if (AuxiliaryOpened == false) {
-		I_Error("W_UseAuxiliary: WAD not opened.");
-	}
-	lumpinfo = AuxiliaryLumpInfo;
-	numlumps = AuxiliaryNumLumps;
-	lumpcache = AuxiliaryLumpCache;
 }
 
 //==========================================================================
@@ -360,7 +194,7 @@ int W_NumLumps(void)
 //
 //==========================================================================
 
-int W_CheckNumForName(char *name)
+int W_CheckNumForName(const char *name)
 {
 	char name8[9];
 	int v1, v2;
@@ -392,7 +226,7 @@ int W_CheckNumForName(char *name)
 //
 //==========================================================================
 
-int W_GetNumForName(char *name)
+int W_GetNumForName(const char *name)
 {
 	int i;
 
@@ -437,14 +271,13 @@ void W_ReadLump(int lump, void *dest)
 		I_Error("W_ReadLump: %i >= numlumps", lump);
 	}
 	l = lumpinfo + lump;
-	//I_BeginRead();
+
 	lseek(l->handle, l->position, SEEK_SET);
 	c = read(l->handle, dest, l->size);
 	if (c < l->size) {
 		I_Error("W_ReadLump: only read %i of %i on lump %i", c, l->size,
 			lump);
 	}
-	//I_EndRead();
 }
 
 //==========================================================================
@@ -466,6 +299,7 @@ void *W_CacheLumpNum(int lump, int tag)
 	} else {
 		Z_ChangeTag(lumpcache[lump], tag);
 	}
+
 	return lumpcache[lump];
 }
 
@@ -475,68 +309,7 @@ void *W_CacheLumpNum(int lump, int tag)
 //
 //==========================================================================
 
-void *W_CacheLumpName(char *name, int tag)
+void *W_CacheLumpName(const char *name, int tag)
 {
 	return W_CacheLumpNum(W_GetNumForName(name), tag);
 }
-
-//==========================================================================
-//
-// W_Profile
-//
-//==========================================================================
-
-// Ripped out for Heretic
-/*
-int	info[2500][10];
-int	profilecount;
-
-void W_Profile (void)
-{
-	int		i;
-	memblock_t	*block;
-	void	*ptr;
-	char	ch;
-	FILE	*f;
-	int		j;
-	char	name[9];
-	
-	
-	for (i=0 ; i<numlumps ; i++)
-	{	
-		ptr = lumpcache[i];
-		if (!ptr)
-		{
-			ch = ' ';
-			continue;
-		}
-		else
-		{
-			block = (memblock_t *) ( (byte *)ptr - sizeof(memblock_t));
-			if (block->tag < PU_PURGELEVEL)
-				ch = 'S';
-			else
-				ch = 'P';
-		}
-		info[i][profilecount] = ch;
-	}
-	profilecount++;
-	
-	f = fopen ("waddump.txt","w");
-	name[8] = 0;
-	for (i=0 ; i<numlumps ; i++)
-	{
-		memcpy (name,lumpinfo[i].name,8);
-		for (j=0 ; j<8 ; j++)
-			if (!name[j])
-				break;
-		for ( ; j<8 ; j++)
-			name[j] = ' ';
-		fprintf (f,"%s ",name);
-		for (j=0 ; j<profilecount ; j++)
-			fprintf (f,"    %c",info[i][j]);
-		fprintf (f,"\n");
-	}
-	fclose (f);
-}
-*/

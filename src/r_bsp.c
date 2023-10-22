@@ -293,10 +293,6 @@ boolean R_CheckBBox(fixed_t *bspcoord)
 	cliprange_t *start;
 	int sx1, sx2;
 
-#ifdef __NeXT__
-	RD_DrawBBox(bspcoord);
-#endif
-
 	// find the corners of the box that define the edges from current viewpoint
 	if (viewx <= bspcoord[BOXLEFT])
 		boxx = 0;
@@ -320,10 +316,6 @@ boolean R_CheckBBox(fixed_t *bspcoord)
 	y1 = bspcoord[checkcoord[boxpos][1]];
 	x2 = bspcoord[checkcoord[boxpos][2]];
 	y2 = bspcoord[checkcoord[boxpos][3]];
-
-#ifdef __NeXT__
-//      RD_DisplayLine (x1, y1, x2, y2, 0.1);
-#endif
 
 	//
 	// check clip list for an open space
@@ -450,10 +442,6 @@ void R_RenderBSPNode(int bspnum)
 	}
 
 	bsp = &nodes[bspnum];
-
-#ifdef __NeXT__
-	RD_DrawNodeLine(bsp);
-#endif
 
 	//
 	// decide which side the view point is on

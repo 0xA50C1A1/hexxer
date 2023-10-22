@@ -80,18 +80,10 @@ static byte antialias[NUMALIAS][8] = { { 83, 84, 85, 86, 87, 88, 89, 90 },
 				       { 107, 108, 109, 110, 111, 112, 89,
 					 90 } };
 
-/*
-static byte *aliasmax[NUMALIAS] = {
-	&antialias[0][7], &antialias[1][7], &antialias[2][7]
-};*/
-
 static byte *maplump; // pointer to the raw data for the automap background.
 static short mapystart = 0; // y-value for the start of the map bitmap...used in
 	//the parallax stuff.
 static short mapxstart = 0; //x-value for the bitmap.
-
-//byte screens[][SCREENWIDTH*SCREENHEIGHT];
-//void V_MarkRect (int x, int y, int width, int height);
 
 // Functions
 
@@ -100,25 +92,6 @@ void DrawWuLine(int X0, int Y0, int X1, int Y1, byte *BaseColor, int NumLevels,
 
 void AM_DrawDeathmatchStats(void);
 static void DrawWorldTimer(void);
-
-// Calculates the slope and slope according to the x-axis of a line
-// segment in map coordinates (with the upright y-axis n' all) so
-// that it can be used with the brain-dead drawing stuff.
-
-// Ripped out for Heretic
-/*
-void AM_getIslope(mline_t *ml, islope_t *is)
-{
-  int dx, dy;
-
-  dy = ml->a.y - ml->b.y;
-  dx = ml->b.x - ml->a.x;
-  if (!dy) is->islp = (dx<0?-MAXINT:MAXINT);
-  else is->islp = FixedDiv(dx, dy);
-  if (!dx) is->slp = (dy<0?-MAXINT:MAXINT);
-  else is->slp = FixedDiv(dy, dx);
-}
-*/
 
 void AM_activateNewScale(void)
 {
@@ -159,17 +132,6 @@ void AM_restoreScaleAndLoc(void)
 	scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 }
 
-// adds a marker at the current location
-
-/*
-void AM_addMark(void)
-{
-  markpoints[markpointnum].x = m_x + m_w/2;
-  markpoints[markpointnum].y = m_y + m_h/2;
-  markpointnum = (markpointnum + 1) % AM_NUMMARKPOINTS;
-
-}
-*/
 void AM_findMinMaxBoundaries(void)
 {
 	int i;
@@ -223,18 +185,7 @@ void AM_changeWindowLoc(void)
 		m_y = min_y - m_h / 2;
 		m_paninc.y = 0;
 	}
-	/*
-  mapxstart += MTOF(m_paninc.x+FRACUNIT/2);
-  mapystart -= MTOF(m_paninc.y+FRACUNIT/2);
-  if(mapxstart >= finit_width)
-		mapxstart -= finit_width;
-  if(mapxstart < 0)
-		mapxstart += finit_width;
-  if(mapystart >= finit_height)
-		mapystart -= finit_height;
-  if(mapystart < 0)
-		mapystart += finit_height;
-*/
+
 	m_x2 = m_x + m_w;
 	m_y2 = m_y + m_h;
 }
@@ -300,15 +251,6 @@ void AM_loadPics(void)
 {
 	maplump = W_CacheLumpName("AUTOPAGE", PU_STATIC);
 }
-
-/*
-void AM_clearMarks(void)
-{
-  int i;
-  for (i=0;i<AM_NUMMARKPOINTS;i++) markpoints[i].x = -1; // means empty
-  markpointnum = 0;
-}
-*/
 
 // should be called at the start of every level
 // right now, i figure it out myself
@@ -524,48 +466,10 @@ void AM_doFollowPlayer(void)
 		m_x2 = m_x + m_w;
 		m_y2 = m_y + m_h;
 
-		// do the parallax parchment scrolling.
-		/*
-	 dmapx = (MTOF(plr->mo->x)-MTOF(f_oldloc.x)); //fixed point
-	 dmapy = (MTOF(f_oldloc.y)-MTOF(plr->mo->y));
-
-	 if(f_oldloc.x == MAXINT) //to eliminate an error when the user first
-		dmapx=0;  //goes into the automap.
-	 mapxstart += dmapx;
-	 mapystart += dmapy;
-
-  	 while(mapxstart >= finit_width)
-			mapxstart -= finit_width;
-    while(mapxstart < 0)
-			mapxstart += finit_width;
-    while(mapystart >= finit_height)
-			mapystart -= finit_height;
-    while(mapystart < 0)
-			mapystart += finit_height;
-*/
 		f_oldloc.x = plr->mo->x;
 		f_oldloc.y = plr->mo->y;
 	}
 }
-
-// Ripped out for Heretic
-/*
-void AM_updateLightLev(void)
-{
-  static nexttic = 0;
-//static int litelevels[] = { 0, 3, 5, 6, 6, 7, 7, 7 };
-  static int litelevels[] = { 0, 4, 7, 10, 12, 14, 15, 15 };
-  static int litelevelscnt = 0;
-
-  // Change light level
-  if (amclock>nexttic)
-  {
-    lightlev = litelevels[litelevelscnt++];
-    if (litelevelscnt == sizeof(litelevels)/sizeof(int)) litelevelscnt = 0;
-    nexttic = amclock + 6 - (amclock % 6);
-  }
-}
-*/
 
 void AM_Ticker(void)
 {
@@ -637,9 +541,6 @@ void AM_clearFB(int color)
 		if (j >= finit_height * finit_width)
 			j = 0;
 	}
-
-	//	 memcpy(screen, maplump, finit_width*finit_height);
-	//  memset(fb, color, f_w*f_h);
 }
 
 // Based on Cohen-Sutherland clipping algorithm but with a slightly
@@ -1182,53 +1083,6 @@ void AM_drawThings(int colors, int colorrange)
 		}
 	}
 }
-
-/*
-void AM_drawMarks(void)
-{
-  int i, fx, fy, w, h;
-
-  for (i=0;i<AM_NUMMARKPOINTS;i++)
-  {
-    if (markpoints[i].x != -1)
-    {
-      w = SHORT(marknums[i]->width);
-      h = SHORT(marknums[i]->height);
-      fx = CXMTOF(markpoints[i].x);
-      fy = CYMTOF(markpoints[i].y);
-      if (fx >= f_x && fx <= f_w - w && fy >= f_y && fy <= f_h - h)
-  			V_DrawPatch(fx, fy, marknums[i]);
-    }
-  }
-}
-*/
-/*
-void AM_drawkeys(void)
-{
-	if(KeyPoints[0].x != 0 || KeyPoints[0].y != 0)
-	{
-		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, YELLOWKEY,
-			KeyPoints[0].x, KeyPoints[0].y);
-	}
-	if(KeyPoints[1].x != 0 || KeyPoints[1].y != 0)
-	{
-		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, GREENKEY,
-			KeyPoints[1].x, KeyPoints[1].y);
-	}
-	if(KeyPoints[2].x != 0 || KeyPoints[2].y != 0)
-	{
-		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, BLUEKEY,
-			KeyPoints[2].x, KeyPoints[2].y);
-	}
-}
-*/
-
-/*
-void AM_drawCrosshair(int color)
-{
-  fb[(f_w*(f_h+1))/2] = color; // single point for now
-}
-*/
 
 void AM_Drawer(void)
 {

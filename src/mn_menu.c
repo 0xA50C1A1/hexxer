@@ -421,14 +421,6 @@ void MN_Drawer(void)
 	MenuItem_t *item;
 	char *selName;
 
-#ifdef TIMEBOMB
-	// Beta blinker ***
-	if (leveltime & 16) {
-		MN_DrTextA(BETA_FLASH_TEXT,
-			   160 - (MN_TextAWidth(BETA_FLASH_TEXT) >> 1), 12);
-	}
-#endif // TIMEBOMB
-
 	if (MenuActive == false) {
 		if (askforquit) {
 			MN_DrTextA(
@@ -1114,14 +1106,6 @@ boolean MN_Responder(event_t *event)
 			BorderNeedRefresh = true;
 			UpdateState |= I_FULLSCRN;
 			return (true);
-#ifdef __NeXT__
-		case 'q':
-			MenuActive = false;
-			askforquit = true;
-			typeofask = 5; // suicide
-			return true;
-#endif
-#ifndef __NeXT__
 		case KEY_F1: // help screen
 			SCInfo(0); // start up info screens
 			MenuActive = true;
@@ -1258,21 +1242,6 @@ boolean MN_Responder(event_t *event)
 			P_SetMessage(&players[consoleplayer],
 				     GammaText[usegamma], false);
 			return true;
-		case KEY_F12: // F12 - reload current map (devmaps mode)
-			if (netgame || DevMaps == false) {
-				return false;
-			}
-			if (gamekeydown[key_speed]) { // Monsters ON
-				nomonsters = false;
-			}
-			if (gamekeydown[key_strafe]) { // Monsters OFF
-				nomonsters = true;
-			}
-			G_DeferedInitNew(gameskill, gameepisode, gamemap);
-			P_SetMessage(&players[consoleplayer], TXT_CHEATWARP,
-				     false);
-			return true;
-#endif
 		}
 	}
 
@@ -1481,8 +1450,6 @@ void MN_DrawInfo(void)
 	       (byte *)W_CacheLumpNum(W_GetNumForName("TITLE") + InfoType,
 				      PU_CACHE),
 	       SCREENWIDTH * SCREENHEIGHT);
-	//	V_DrawPatch(0, 0, W_CacheLumpNum(W_GetNumForName("TITLE")+InfoType,
-	//		PU_CACHE));
 }
 
 //---------------------------------------------------------------------------

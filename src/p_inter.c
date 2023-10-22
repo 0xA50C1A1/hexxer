@@ -43,10 +43,6 @@ static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 				 int pieceValue, mobj_t *pieceMobj);
 
-#ifdef __NeXT__
-extern void strupr(char *s);
-#endif
-
 //--------------------------------------------------------------------------
 //
 // PROC P_SetMessage
@@ -260,112 +256,6 @@ static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 		SB_PaletteFlash(false);
 	}
 }
-
-//--------------------------------------------------------------------------
-//
-// FUNC P_GiveWeapon
-//
-// Returns true if the weapon or its mana was accepted.
-//
-//--------------------------------------------------------------------------
-
-/*
-boolean P_GiveWeapon(player_t *player, pclass_t class, weapontype_t weapon)
-{
-	boolean gaveMana;
-	boolean gaveWeapon;
-
-	if(player->class != class)
-	{ // player cannot use this weapon, take it anyway, and get mana
-		if(netgame && !deathmatch)
-		{ // Can't pick up weapons for other classes in coop netplay
-			return false;
-		}
-		if(weapon == WP_SECOND)
-		{
-			return P_GiveMana(player, MANA_1, 25);
-		}
-		else
-		{
-			return P_GiveMana(player, MANA_2, 25);
-		}		
-	}
-	if(netgame && !deathmatch)
-	{ // Cooperative net-game
-		if(player->weaponowned[weapon])
-		{
-			return(false);
-		}
-		player->bonuscount += BONUSADD;
-		player->weaponowned[weapon] = true;
-		if(weapon == WP_SECOND)
-		{
-			P_GiveMana(player, MANA_1, 25);
-		}
-		else 
-		{
-			P_GiveMana(player, MANA_2, 25);
-		}
-		player->pendingweapon = weapon;
-		if(player == &players[consoleplayer])
-		{
-			S_StartSound(NULL, SFX_PICKUP_WEAPON);
-		}
-		return(false);
-	}
-	if(weapon == WP_SECOND)
-	{
-		gaveMana = P_GiveMana(player, MANA_1, 25);
-	}
-	else 
-	{
-		gaveMana = P_GiveMana(player, MANA_2, 25);
-	}
-	if(player->weaponowned[weapon])
-	{
-		gaveWeapon = false;
-	}
-	else
-	{
-		gaveWeapon = true;
-		player->weaponowned[weapon] = true;
-		if(weapon > player->readyweapon)
-		{ // Only switch to more powerful weapons
-			player->pendingweapon = weapon;
-		}
-	}
-	return(gaveWeapon || gaveMana);
-}
-*/
-
-//===========================================================================
-//
-// P_GiveWeaponPiece
-//
-//===========================================================================
-
-/*
-boolean P_GiveWeaponPiece(player_t *player, pclass_t class, int piece)
-{
-	P_GiveMana(player, MANA_1, 20);
-	P_GiveMana(player, MANA_2, 20);
-	if(player->class != class)
-	{
-		return true;
-	}
-	else if(player->pieces&piece)
-	{ // player already has that weapon piece
-		return true;
-	}
-	player->pieces |= piece;
-	if(player->pieces == 7)
-	{ // player has built the fourth weapon!
-		P_GiveWeapon(player, class, WP_FOURTH);
-		S_StartSound(player->mo, SFX_WEAPON_BUILD);
-	}
-	return true;
-}
-*/
 
 //==========================================================================
 //
@@ -602,19 +492,7 @@ boolean P_GivePower(player_t *player, powertype_t power)
 		player->powers[power] = MAULATORTICS;
 		return (true);
 	}
-	/*
-	if(power == pw_ironfeet)
-	{
-		player->powers[power] = IRONTICS;
-		return(true);
-	}
-	if(power == pw_strength)
-	{
-		P_GiveBody(player, 100);
-		player->powers[power] = 1;
-		return(true);
-	}
-*/
+
 	if (player->powers[power]) {
 		return (false); // already got it
 	}
@@ -1997,12 +1875,4 @@ void P_PoisonDamage(player_t *player, mobj_t *source, int damage,
 	if (!(leveltime & 63) && playPainSound) {
 		P_SetMobjState(target, target->info->painstate);
 	}
-	/*
-	if((P_Random() < target->info->painchance)
-		&& !(target->flags&MF_SKULLFLY))
-	{
-		target->flags |= MF_JUSTHIT; // fight back!
-		P_SetMobjState(target, target->info->painstate);
-	}
-*/
 }

@@ -16,7 +16,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <m_fixed.h>
-#include "st_start.h"
 
 #define VERSION 110
 #define VERSION_TEXT "v1.1"
@@ -31,11 +30,7 @@
 #ifndef VER_ID
 #define VER_ID "DVL"
 #endif
-//#define VERSIONTEXT "ID V1.2"
-//#define VERSIONTEXT "RETAIL STORE BETA"		// 9/26/95
-//#define VERSIONTEXT "DVL BETA 10 05 95" // Used for GT for testing
-//#define VERSIONTEXT "DVL BETA 10 07 95" // Just an update for Romero
-//#define VERSIONTEXT "FINAL 1.0 (10 13 95)" // Just an update for Romero
+
 #ifdef RANGECHECK
 #define VERSIONTEXT "Version 1.1 +R " __DATE__ " (" VER_ID ")"
 #else
@@ -125,8 +120,6 @@ extern byte *destview, *destscreen; // PC direct to screen pointers
 #define MINIMUM_HEAP_SIZE 0x800000 //  8 meg
 #define MAXIMUM_HEAP_SIZE 0x2000000 // 32 meg
 
-typedef unsigned int uint;
-
 //#define ANGLE_1		0x01000000
 #define ANGLE_45 0x20000000
 #define ANGLE_90 0x40000000
@@ -206,16 +199,6 @@ typedef enum {
 	ga_worlddone,
 	ga_screenshot
 } gameaction_t;
-
-typedef enum {
-	wipe_0,
-	wipe_1,
-	wipe_2,
-	wipe_3,
-	wipe_4,
-	NUMWIPES,
-	wipe_random
-} wipe_t;
 
 /*
 ===============================================================================
@@ -416,16 +399,6 @@ typedef struct {
 	fixed_t sx, sy;
 } pspdef_t;
 
-/* Old Heretic key type
-typedef enum
-{
-	key_yellow,
-	key_green,
-	key_blue,
-	NUMKEYS
-} keytype_t;
-*/
-
 typedef enum {
 	KEY_1,
 	KEY_2,
@@ -608,7 +581,7 @@ typedef struct player_s {
 	int colormap; // 0-3 for which color to draw player
 	pspdef_t psprites[NUMPSPRITES]; // view sprites (gun, etc)
 	int morphTics; // player is a pig if > 0
-	uint jumpTics; // delay the next jump for a moment
+	unsigned int jumpTics; // delay the next jump for a moment
 	unsigned int worldTimer; // total time the player's been playing
 } player_t;
 
@@ -695,9 +668,6 @@ extern boolean paused;
 
 extern boolean shareware; // true if other episodes not present
 
-extern boolean DevMaps; // true = map development mode
-extern char *DevMapsDir; // development maps directory
-
 extern boolean nomonsters; // checkparm of -nomonsters
 
 extern boolean respawnparm; // checkparm of -respawn
@@ -733,8 +703,6 @@ extern int viewangleoffset; // ANG90 = left side, ANG270 = right
 extern player_t players[MAXPLAYERS];
 
 extern boolean singletics; // debug flag to cancel adaptiveness
-
-extern boolean DebugSound; // debug flag for displaying sound info
 
 extern boolean demoplayback;
 extern int maxzone; // Maximum chunk allocated for zone heap
@@ -861,18 +829,13 @@ typedef struct {
 extern lumpinfo_t *lumpinfo;
 extern int numlumps;
 
-void W_InitMultipleFiles(char **filenames);
-void W_OpenAuxiliary(char *filename);
-void W_CloseAuxiliaryFile(void);
-void W_CloseAuxiliary(void);
-void W_UsePrimary(void);
-void W_UseAuxiliary(void);
-int W_CheckNumForName(char *name);
-int W_GetNumForName(char *name);
+void W_InitMultipleFiles(const char **filenames);
+int W_CheckNumForName(const char *name);
+int W_GetNumForName(const char *name);
 int W_LumpLength(int lump);
 void W_ReadLump(int lump, void *dest);
 void *W_CacheLumpNum(int lump, int tag);
-void *W_CacheLumpName(char *name, int tag);
+void *W_CacheLumpName(const char *name, int tag);
 
 //----------
 //BASE LEVEL
@@ -914,15 +877,6 @@ void TryRunTics(void);
 
 void I_InitNetwork(void);
 void I_NetCmd(void);
-
-void I_WipeUpdate(wipe_t wipe);
-// Copy buffer to video with wipe effect
-
-void I_BeginRead(void);
-void I_EndRead(void);
-
-byte *I_AllocLow(int length);
-// allocates from low memory under dos, just mallocs under unix
 
 //----
 //GAME
@@ -1071,9 +1025,9 @@ extern int myargc;
 extern char **myargv;
 extern int localQuakeHappening[MAXPLAYERS];
 
-int M_CheckParm(char *check);
+int M_CheckParm(const char *check);
 // returns the position of the given parameter in the arg list (0 if not found)
-boolean M_ParmExists(char *check);
+boolean M_ParmExists(const char *check);
 
 void M_ExtractFileBase(char *path, char *dest);
 
@@ -1088,9 +1042,6 @@ void M_AddToBox(fixed_t *box, fixed_t x, fixed_t y);
 
 boolean M_WriteFile(char const *name, void *source, int length);
 int M_ReadFile(char const *name, byte **buffer);
-int M_ReadFileCLib(char const *name, byte **buffer);
-
-void M_ScreenShot(void);
 
 void M_LoadDefaults(char *fileName);
 
@@ -1102,30 +1053,24 @@ int M_DrawText(int x, int y, boolean direct, char *string);
 // SC_man.c
 //------------------------------
 
-void SC_Open(char *name);
-void SC_OpenLump(char *name);
-void SC_OpenFile(char *name);
-void SC_OpenFileCLib(char *name);
+void SC_OpenLump(const char *name);
 void SC_Close(void);
 boolean SC_GetString(void);
 void SC_MustGetString(void);
-void SC_MustGetStringName(char *name);
+void SC_MustGetStringName(const char *name);
 boolean SC_GetNumber(void);
 void SC_MustGetNumber(void);
 void SC_UnGet(void);
-//boolean SC_Check(void);
-boolean SC_Compare(char *text);
-int SC_MatchString(char **strings);
-int SC_MustMatchString(char **strings);
-void SC_ScriptError(char *message);
+boolean SC_Compare(const char *text);
+int SC_MatchString(const char **strings);
+int SC_MustMatchString(const char **strings);
+void SC_ScriptError(const char *message);
 
 extern char *sc_String;
 extern int sc_Number;
 extern int sc_Line;
 extern boolean sc_End;
 extern boolean sc_Crossed;
-extern boolean sc_FileScripts;
-extern char *sc_ScriptsDir;
 
 //------------------------------
 // SN_sonix.c

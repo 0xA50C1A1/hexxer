@@ -137,14 +137,6 @@ result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, int crush,
 				lastpos = sector->ceilingheight;
 				sector->ceilingheight += speed;
 				flag = P_ChangeSector(sector, crush);
-#if 0
-						if (flag == true)
-						{
-							sector->ceilingheight = lastpos;
-							P_ChangeSector(sector,crush);
-							return RES_CRUSHED;
-						}
-#endif
 			}
 			break;
 		}
@@ -204,26 +196,7 @@ void T_MoveFloor(floormove_t *floor)
 			return;
 		}
 		floor->sector->specialdata = NULL;
-		/*
-		if (floor->direction == 1)
-			switch(floor->type)
-			{
-				case donutRaise:
-					floor->sector->special = floor->newspecial;
-					floor->sector->floorpic = floor->texture;
-				default:
-					break;
-			}
-		else if (floor->direction == -1)
-			switch(floor->type)
-			{
-				case lowerAndChange:
-					floor->sector->special = floor->newspecial;
-					floor->sector->floorpic = floor->texture;
-				default:
-					break;
-			}
-		*/
+
 		if (floor->textureChange) {
 			floor->sector->floorpic -= floor->textureChange;
 		}
@@ -497,16 +470,7 @@ static void ProcessStairSector(sector_t *sec, int type, int height,
 		floor->resetDelayCount = delay;
 		floor->resetHeight = sec->floorheight;
 		break;
-		/*
-		case STAIRS_PHASED:
-			floor->floordestheight = sec->floorheight+StepDelta;
-			floor->speed = Speed;
-			floor->delayCount = StartDelay;
-			StartDelay += StartDelayDelta;
-			floor->textureChange = TextureChange;
-			floor->resetDelayCount = StartDelay;
-			break;
-*/
+
 	default:
 		break;
 	}

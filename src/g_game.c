@@ -1181,20 +1181,6 @@ void G_DoTeleportNewMap(void)
 	RebornPosition = LeavePosition;
 }
 
-/*
-boolean secretexit;
-void G_ExitLevel (void)
-{
-	secretexit = false;
-	gameaction = ga_completed;
-}
-void G_SecretExitLevel (void)
-{
-	secretexit = true;
-	gameaction = ga_completed;
-}
-*/
-
 //==========================================================================
 //
 // G_Completed
@@ -1230,44 +1216,6 @@ void G_DoCompleted(void)
 		gamestate = GS_INTERMISSION;
 		IN_Start();
 	}
-
-	/*
-	int i;
-	static int afterSecret[3] = { 7, 5, 5 };
-
-	gameaction = ga_nothing;
-	if(G_CheckDemoStatus())
-	{
-		return;
-	}
-	for(i = 0; i < MAXPLAYERS; i++)
-	{
-		if(playeringame[i])
-		{
-			G_PlayerFinishLevel(i);
-		}
-	}
-	prevmap = gamemap;
-	if(secretexit == true)
-	{
-		gamemap = 9;
-	}
-	else if(gamemap == 9)
-	{ // Finished secret level
-		gamemap = afterSecret[gameepisode-1];
-	}
-	else if(gamemap == 8)
-	{
-		gameaction = ga_victory;
-		return;
-	}
-	else
-	{
-		gamemap++;
-	}
-	gamestate = GS_INTERMISSION;
-	IN_Start();
-*/
 }
 
 //============================================================================
@@ -1465,14 +1413,6 @@ void G_InitNew(skill_t skill, int episode, int map)
 
 	// Initialize the sky
 	R_InitSky(map);
-
-	// Give one null ticcmd_t
-	//gametic = 0;
-	//maketic = 1;
-	//for (i=0 ; i<MAXPLAYERS ; i++)
-	//	nettics[i] = 1; // one null event for this gametic
-	//memset (localcmds,0,sizeof(localcmds));
-	//memset (netcmds,0,sizeof(netcmds));
 
 	G_DoLoadLevel();
 }

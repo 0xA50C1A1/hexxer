@@ -118,69 +118,6 @@ void P_SpawnPhasedLight(sector_t *sector, int base, int index);
 void P_SpawnLightSequence(sector_t *sector, int indexStep);
 boolean EV_SpawnLight(line_t *line, byte *arg, lighttype_t type);
 
-#if 0
-typedef struct
-{
-	thinker_t thinker;
-	sector_t *sector;
-	int count;
-	int maxlight;
-	int minlight;
-	int maxtime;
-	int mintime;
-} lightflash_t;
-
-typedef struct
-{
-	thinker_t thinker;
-	sector_t *sector;
-	int count;
-	int minlight;
-	int maxlight;
-	int darktime;
-	int brighttime;
-} strobe_t;
-
-typedef struct
-{
-	thinker_t thinker;
-	sector_t *sector;
-	int minlight;
-	int maxlight;
-	int direction;
-} glow_t;
-
-typedef struct
-{
-	thinker_t       thinker;
-	sector_t        *sector;
-	int index;
-	int base;
-} phase_t;
-
-#define GLOWSPEED 8
-#define STROBEBRIGHT 5
-#define FASTDARK 15
-#define SLOWDARK 35
-
-#define LIGHT_SEQUENCE_START 2
-#define LIGHT_SEQUENCE 3
-#define LIGHT_SEQUENCE_ALT 4
-
-void T_LightFlash (lightflash_t *flash);
-void P_SpawnLightFlash (sector_t *sector);
-void T_StrobeFlash (strobe_t *flash);
-void P_SpawnStrobeFlash (sector_t *sector, int fastOrSlow, int inSync);
-void EV_StartLightStrobing(line_t *line);
-void EV_TurnTagLightsOff(line_t      *line);
-void EV_LightTurnOn(line_t *line, int bright);
-void T_Glow(glow_t *g);
-void P_SpawnGlowingLight(sector_t *sector);
-void T_Phase(phase_t *phase);
-void P_SpawnPhasedLight(sector_t *sector, int base, int index);
-void P_SpawnLightSequence(sector_t *sector, int indexStep);
-#endif
-
 /*
 ===============================================================================
 

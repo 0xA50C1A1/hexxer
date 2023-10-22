@@ -250,9 +250,6 @@ void P_LoadSectors(int lump)
 	ms = (mapsector_t *)data;
 	ss = sectors;
 
-	// Make sure primary lumps are used for flat searching
-	W_UsePrimary();
-
 	for (i = 0; i < numsectors; i++, ss++, ms++) {
 		ss->floorheight = SHORT(ms->floorheight) << FRACBITS;
 		ss->ceilingheight = SHORT(ms->ceilingheight) << FRACBITS;
@@ -264,9 +261,7 @@ void P_LoadSectors(int lump)
 		ss->thinglist = NULL;
 		ss->seqType = SEQTYPE_STONE; // default seqType
 	}
-	if (DevMaps) {
-		W_UseAuxiliary();
-	}
+
 	Z_Free(data);
 }
 
@@ -459,9 +454,6 @@ void P_LoadSideDefs(int lump)
 	msd = (mapsidedef_t *)data;
 	sd = sides;
 
-	// Make sure primary lumps are used for texture searching
-	W_UsePrimary();
-
 	for (i = 0; i < numsides; i++, msd++, sd++) {
 		sd->textureoffset = SHORT(msd->textureoffset) << FRACBITS;
 		sd->rowoffset = SHORT(msd->rowoffset) << FRACBITS;
@@ -470,9 +462,7 @@ void P_LoadSideDefs(int lump)
 		sd->midtexture = R_TextureNumForName(msd->midtexture);
 		sd->sector = &sectors[SHORT(msd->sector)];
 	}
-	if (DevMaps) {
-		W_UseAuxiliary();
-	}
+
 	Z_Free(data);
 }
 
@@ -603,7 +593,6 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	int i;
 	int parm;
 	char lumpname[9];
-	char auxName[128];
 	int lumpnum;
 	mobj_t *mobj;
 
@@ -620,10 +609,6 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	P_InitThinkers();
 	leveltime = 0;
 
-	if (DevMaps) {
-		sprintf(auxName, "%sMAP%02d.WAD", DevMapsDir, map);
-		W_OpenAuxiliary(auxName);
-	}
 	sprintf(lumpname, "MAP%02d", map);
 	lumpnum = W_GetNumForName(lumpname);
 	//
@@ -649,13 +634,6 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	//
 	// End of map lump processing
 	//
-	if (DevMaps) {
-		// Close the auxiliary file, but don't free its loaded lumps.
-		// The next call to W_OpenAuxiliary() will do a full shutdown
-		// of the current auxiliary WAD (free lumps and info lists).
-		W_CloseAuxiliaryFile();
-		W_UsePrimary();
-	}
 
 	// If deathmatch, randomly spawn the active players
 	TimerGame = 0;
@@ -737,7 +715,7 @@ static void InitMapInfo(void)
 	strcpy(info->name, UNKNOWN_MAP_NAME);
 
 	//	strcpy(info->songLump, DEFAULT_SONG_LUMP);
-	SC_Open(MAPINFO_SCRIPT_NAME);
+	SC_OpenLump(MAPINFO_SCRIPT_NAME);
 	while (SC_GetString()) {
 		if (SC_Compare("MAP") == false) {
 			SC_ScriptError(NULL);
@@ -1119,17 +1097,3 @@ void InitMapMusicInfo(void)
 	}
 	MapCount = 98;
 }
-
-/*
-void My_Debug(void)
-{
-	int i;
-
-	printf("My debug stuff ----------------------\n");
-	printf("gamemap=%d\n",gamemap);
-	for (i=0; i<10; i++)
-	{
-		printf("i=%d  songlump=%s\n",i,MapInfo[i].songLump);
-	}
-}
-*/

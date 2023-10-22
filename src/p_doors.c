@@ -194,26 +194,6 @@ boolean EV_VerticalDoor(line_t *line, mobj_t *thing)
 	secnum = sec - sectors;
 	if (sec->specialdata) {
 		return false;
-		/*
-		door = sec->specialdata;
-		switch(line->special)
-		{	// only for raise doors
-			case 12:
-			 	if(door->direction == -1)
-			 	{
-			 		door->direction = 1; // go back up
-			 	}
-			 	else
-			 	{
-			 		if(!thing->player)
-			 		{ // Monsters don't close doors
-			 			return;
-			 		}
-			 		door->direction = -1; // start going down immediately
-			 	}
-			 	return;
-		}
-*/
 	}
 	//
 	// new door thinker
@@ -249,54 +229,3 @@ boolean EV_VerticalDoor(line_t *line, mobj_t *thing)
 			 SEQ_DOOR_STONE + door->sector->seqType);
 	return true;
 }
-
-//==================================================================
-//
-//      Spawn a door that closes after 30 seconds
-//
-//==================================================================
-
-/*
-void P_SpawnDoorCloseIn30(sector_t *sec)
-{
-	vldoor_t *door;
-
-	door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
-	P_AddThinker(&door->thinker);
-	sec->specialdata = door;
-	sec->special = 0;
-	door->thinker.function = T_VerticalDoor;
-	door->sector = sec;
-	door->direction = 0;
-	door->type = DREV_NORMAL;
-	door->speed = VDOORSPEED;
-	door->topcountdown = 30*35;
-}
-*/
-
-//==================================================================
-//
-//      Spawn a door that opens after 5 minutes
-//
-//==================================================================
-
-/*
-void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
-{
-	vldoor_t *door;
-
-	door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
-	P_AddThinker(&door->thinker);
-	sec->specialdata = door;
-	sec->special = 0;
-	door->thinker.function = T_VerticalDoor;
-	door->sector = sec;
-	door->direction = 2;
-	door->type = DREV_RAISEIN5MINS;
-	door->speed = VDOORSPEED;
-	door->topheight = P_FindLowestCeilingSurrounding(sec);
-	door->topheight -= 4*FRACUNIT;
-	door->topwait = VDOORWAIT;
-	door->topcountdown = 5*60*35;
-}
-*/

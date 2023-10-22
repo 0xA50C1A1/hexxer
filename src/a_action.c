@@ -111,25 +111,6 @@ int orbitTableY[256] = {
 //
 //--------------------------------------------------------------------------
 
-//==========================================================================
-//
-// A_DripBlood
-//
-//==========================================================================
-
-/*
-void A_DripBlood(mobj_t *actor)
-{
-	mobj_t *mo;
-
-	mo = P_SpawnMobj(actor->x+(P_SubRandom()<<11),
-		actor->y+(P_SubRandom()<<11), actor->z, MT_BLOOD);
-	mo->momx = P_SubRandom()<<10;
-	mo->momy = P_SubRandom()<<10;
-	mo->flags2 |= MF2_LOGRAV;
-}
-*/
-
 //============================================================================
 //
 // A_PotteryExplode
@@ -328,50 +309,6 @@ void A_LeafCheck(mobj_t *actor)
 	actor->flags |= MF_MISSILE;
 }
 
-/*
-#define ORBIT_RADIUS	(15*FRACUNIT)
-void GenerateOrbitTable(void)
-{
-	int angle;
-
-	for (angle=0; angle<256; angle++)
-	{
-		orbitTableX[angle] = FixedMul(ORBIT_RADIUS, finecosine[angle<<5]);
-		orbitTableY[angle] = FixedMul(ORBIT_RADIUS, finesine[angle<<5]);
-	}
-
-	printf("int orbitTableX[256]=\n{\n");
-	for (angle=0; angle<256; angle+=8)
-	{
-		printf("%d, %d, %d, %d, %d, %d, %d, %d,\n",
-			orbitTableX[angle],
-			orbitTableX[angle+1],
-			orbitTableX[angle+2],
-			orbitTableX[angle+3],
-			orbitTableX[angle+4],
-			orbitTableX[angle+5],
-			orbitTableX[angle+6],
-			orbitTableX[angle+7]);
-	}
-	printf("};\n\n");
-
-	printf("int orbitTableY[256]=\n{\n");
-	for (angle=0; angle<256; angle+=8)
-	{
-		printf("%d, %d, %d, %d, %d, %d, %d, %d,\n",
-			orbitTableY[angle],
-			orbitTableY[angle+1],
-			orbitTableY[angle+2],
-			orbitTableY[angle+3],
-			orbitTableY[angle+4],
-			orbitTableY[angle+5],
-			orbitTableY[angle+6],
-			orbitTableY[angle+7]);
-	}
-	printf("};\n");
-}
-*/
-
 // New bridge stuff
 //	Parent
 //		special1	true == removing from world
@@ -432,32 +369,6 @@ void A_BridgeRemove(mobj_t *actor)
 
 //==========================================================================
 //
-// A_GhostOn
-//
-//==========================================================================
-
-/*
-void A_GhostOn(mobj_t *actor)
-{
-	actor->flags |= MF_SHADOW;
-}
-*/
-
-//==========================================================================
-//
-// A_GhostOff
-//
-//==========================================================================
-
-/*
-void A_GhostOff(mobj_t *actor)
-{
-	actor->flags &= ~MF_SHADOW;
-}
-*/
-
-//==========================================================================
-//
 // A_HideThing
 //
 //==========================================================================
@@ -513,19 +424,6 @@ void A_SetAltShadow(mobj_t *actor)
 	actor->flags &= ~MF_SHADOW;
 	actor->flags |= MF_ALTSHADOW;
 }
-
-//==========================================================================
-//
-// A_UnSetAltShadow
-//
-//==========================================================================
-
-/*
-void A_UnSetAltShadow(mobj_t *actor)
-{
-	actor->flags &= ~MF_ALTSHADOW;
-}
-*/
 
 //--------------------------------------------------------------------------
 //

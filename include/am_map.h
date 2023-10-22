@@ -13,8 +13,6 @@
 #ifndef __AMMAP_H__
 #define __AMMAP_H__
 
-#pragma once
-
 // For use if I do walls with outsides/insides
 #define REDS 12 * 8
 #define REDRANGE 1 //16
@@ -74,21 +72,12 @@
 #define AM_PANUPKEY KEY_UPARROW
 #define AM_PANRIGHTKEY KEY_RIGHTARROW
 #define AM_PANLEFTKEY KEY_LEFTARROW
-//#define AM_PANDOWNKEY	SC_DOWNARROW
-//#define AM_PANUPKEY		SC_UPARROW
-//#define AM_PANRIGHTKEY	SC_RIGHTARROW
-//#define AM_PANLEFTKEY	SC_LEFTARROW
 
 #define AM_ZOOMINKEY '='
-//#define AM_ZOOMINKEY		13
-//#define AM_ZOOMOUTKEY 	12
 #define AM_ZOOMOUTKEY '-'
 #define AM_STARTKEY KEY_TAB
 #define AM_ENDKEY KEY_TAB
 #define AM_GOBIGKEY '0'
-//#define AM_GOBIGKEY		11
-//#define AM_FOLLOWKEY 	33
-//#define AM_GRIDKEY		34
 #define AM_FOLLOWKEY 'f'
 #define AM_GRIDKEY 'g'
 

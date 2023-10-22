@@ -1000,24 +1000,6 @@ void P_MobjThinker(mobj_t *mobj)
 						mobj->momz = 0;
 					}
 				}
-				/* Landing on another player, and mimicking his movements
-				if(mobj->player && onmo->player)
-				{
-					mobj->momx = onmo->momx;
-					mobj->momy = onmo->momy;
-					if(onmo->z < onmo->floorz)
-					{
-						mobj->z += onmo->floorz-onmo->z;
-						if(onmo->player)
-						{
-							onmo->player->viewheight -= onmo->floorz-onmo->z;
-							onmo->player->deltaviewheight = (VIEWHEIGHT-
-								onmo->player->viewheight)>>3;
-						}
-						onmo->z = onmo->floorz;
-					}
-				}
-*/
 			}
 		} else {
 			P_ZMovement(mobj);
@@ -1555,31 +1537,6 @@ void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 	PuffSpawned = puff;
 }
 
-/*
-================
-=
-= P_SpawnBlood
-=
-================
-*/
-
-/*
-void P_SpawnBlood (fixed_t x, fixed_t y, fixed_t z, int damage)
-{
-	mobj_t	*th;
-	
-	z += (P_SubRandom()<<10);
-	th = P_SpawnMobj (x,y,z, MT_BLOOD);
-	th->momz = FRACUNIT*2;
-	th->tics -= P_Random()&3;
-
-	if (damage <= 12 && damage >= 9)
-		P_SetMobjState (th,S_BLOOD2);
-	else if (damage < 9)
-		P_SetMobjState (th,S_BLOOD3);
-}
-*/
-
 //---------------------------------------------------------------------------
 //
 // PROC P_BloodSplatter
@@ -2030,51 +1987,6 @@ mobj_t *P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
 	}
 	return (MissileMobj);
 }
-
-//----------------------------------------------------------------------------
-//
-// P_SpawnPlayerMinotaur -
-//
-//	Special missile that has larger blocking than player
-//----------------------------------------------------------------------------
-
-/*
-mobj_t *P_SpawnPlayerMinotaur(mobj_t *source, mobjtype_t type)
-{
-	angle_t an;
-	fixed_t x, y, z;
-	fixed_t dist=0 *FRACUNIT;
-
-	an = source->angle;
-	x = source->x + FixedMul(dist, finecosine[an>>ANGLETOFINESHIFT]);
-	y = source->y + FixedMul(dist, finesine[an>>ANGLETOFINESHIFT]);
-	z = source->z + 4*8*FRACUNIT+((source->player->lookdir)<<FRACBITS)/173;
-	z -= source->floorclip;
-	MissileMobj = P_SpawnMobj(x, y, z, type);
-	if(MissileMobj->info->seesound)
-	{
-		//S_StartSound(MissileMobj, MissileMobj->info->seesound);
-	}
-	MissileMobj->target = source;
-	MissileMobj->angle = an;
-	MissileMobj->momx = FixedMul(MissileMobj->info->speed,
-		finecosine[an>>ANGLETOFINESHIFT]);
-	MissileMobj->momy = FixedMul(MissileMobj->info->speed,
-		finesine[an>>ANGLETOFINESHIFT]);
-	MissileMobj->momz = 0;
-
-//	MissileMobj->x += (MissileMobj->momx>>3);
-//	MissileMobj->y += (MissileMobj->momy>>3);
-//	MissileMobj->z += (MissileMobj->momz>>3);
-
-	if(!P_TryMove(MissileMobj, MissileMobj->x, MissileMobj->y))
-	{ // Wouln't fit
-
-		return(NULL);
-	}
-	return(MissileMobj);
-}
-*/
 
 //---------------------------------------------------------------------------
 //

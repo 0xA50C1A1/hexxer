@@ -1383,31 +1383,6 @@ void A_Scream(mobj_t *actor)
 	}
 }
 
-//---------------------------------------------------------------------------
-//
-// PROC P_DropItem
-//
-//---------------------------------------------------------------------------
-
-/*
-void P_DropItem(mobj_t *source, mobjtype_t type, int special, int chance)
-{
-	mobj_t *mo;
-
-	if(P_Random() > chance)
-	{
-		return;
-	}
-	mo = P_SpawnMobj(source->x, source->y,
-		source->z+(source->height>>1), type);
-	mo->momx = P_SubRandom()<<8;
-	mo->momy = P_SubRandom()<<8;
-	mo->momz = FRACUNIT*5+(P_Random()<<10);
-	mo->flags2 |= MF2_DROPPED;
-	mo->health = special;
-}
-*/
-
 //----------------------------------------------------------------------------
 //
 // PROC A_NoBlocking
@@ -2493,8 +2468,7 @@ void A_BishopPainBlur(mobj_t *actor)
 	}
 	mo = P_SpawnMobj(actor->x + (P_SubRandom() << 12),
 			 actor->y + (P_SubRandom() << 12),
-			 actor->z + (P_SubRandom() << 11),
-			 MT_BISHOPPAINBLUR);
+			 actor->z + (P_SubRandom() << 11), MT_BISHOPPAINBLUR);
 	if (mo) {
 		mo->angle = actor->angle;
 	}
@@ -3802,19 +3776,6 @@ void A_CastSorcererSpell(mobj_t *actor)
 	}
 }
 
-/*
-void A_SpawnReinforcements(mobj_t *actor)
-{
-	mobj_t *parent = actor->target;
-	mobj_t *mo;
-	angle_t ang;
-
-	ang = ANGLE_1 * P_Random();
-	mo = P_SpawnMissileAngle(actor, MT_SORCFX3, ang, 5*FRACUNIT);
-	if (mo) mo->target = parent;
-}
-*/
-
 // actor is ball
 void A_SorcOffense1(mobj_t *actor)
 {
@@ -4012,13 +3973,6 @@ void A_SpawnBishop(mobj_t *actor)
 	}
 	P_SetMobjState(actor, S_NULL);
 }
-
-/*
-void A_SmokePuffEntry(mobj_t *actor)
-{
-	P_SpawnMobj(actor->x, actor->y, actor->z, MT_MNTRSMOKE);
-}
-*/
 
 void A_SmokePuffExit(mobj_t *actor)
 {
