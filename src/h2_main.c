@@ -67,7 +67,7 @@ static void DrawAndBlit(void);
 static void ExecOptionFILE(char **args, int tag);
 static void ExecOptionSKILL(char **args, int tag);
 static void ExecOptionPLAYDEMO(char **args, int tag);
-static void ExecOptionMAXZONE(char **args, int tag);
+
 static void CreateSavePath(void);
 static void WarpCheck(void);
 
@@ -115,7 +115,7 @@ static execOpt_t ExecOptions[] = {
 	{ "-skill", ExecOptionSKILL, 1, 0 },
 	{ "-playdemo", ExecOptionPLAYDEMO, 1, 0 },
 	{ "-timedemo", ExecOptionPLAYDEMO, 1, 0 },
-	{ "-maxzone", ExecOptionMAXZONE, 1, 0 },
+
 	{ NULL, NULL, 0, 0 } // Terminator
 };
 
@@ -373,18 +373,6 @@ long superatol(char *s)
 		}
 	}
 	return (mul * n);
-}
-
-static void ExecOptionMAXZONE(char **args, int tag)
-{
-	int size;
-
-	size = superatol(args[1]);
-	if (size < MINIMUM_HEAP_SIZE)
-		size = MINIMUM_HEAP_SIZE;
-	if (size > MAXIMUM_HEAP_SIZE)
-		size = MAXIMUM_HEAP_SIZE;
-	maxzone = size;
 }
 
 //==========================================================================
