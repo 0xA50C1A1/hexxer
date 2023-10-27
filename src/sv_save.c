@@ -186,6 +186,7 @@ static thinkInfo_t ThinkerInfo[] = {
 
 void SV_SaveGame(int slot, char *description)
 {
+#if 0
 	char fileName[100];
 	char versionText[HXS_VERSION_TEXT_LENGTH];
 
@@ -228,6 +229,7 @@ void SV_SaveGame(int slot, char *description)
 
 	// Copy base slot to destination slot
 	CopySaveSlot(BASE_SLOT, slot);
+#endif
 }
 
 //==========================================================================
@@ -238,6 +240,7 @@ void SV_SaveGame(int slot, char *description)
 
 void SV_SaveMap(boolean savePlayers)
 {
+#if 0
 	char fileName[100];
 
 	SavingPlayers = savePlayers;
@@ -268,6 +271,7 @@ void SV_SaveMap(boolean savePlayers)
 
 	// Close the output file
 	CloseStreamOut();
+#endif
 }
 
 //==========================================================================
@@ -278,6 +282,7 @@ void SV_SaveMap(boolean savePlayers)
 
 void SV_LoadGame(int slot)
 {
+#if 0
 	int i;
 	char fileName[100];
 	player_t playerBackup[MAXPLAYERS];
@@ -346,6 +351,7 @@ void SV_LoadGame(int slot)
 				players[i].inventory[inv_ptr].type;
 		}
 	}
+#endif
 }
 
 //==========================================================================
@@ -358,8 +364,10 @@ void SV_LoadGame(int slot)
 
 void SV_UpdateRebornSlot(void)
 {
+#if 0
 	ClearSaveSlot(REBORN_SLOT);
 	CopySaveSlot(BASE_SLOT, REBORN_SLOT);
+#endif
 }
 
 //==========================================================================
@@ -370,7 +378,9 @@ void SV_UpdateRebornSlot(void)
 
 void SV_ClearRebornSlot(void)
 {
+#if 0
 	ClearSaveSlot(REBORN_SLOT);
+#endif
 }
 
 //==========================================================================
@@ -381,6 +391,7 @@ void SV_ClearRebornSlot(void)
 
 void SV_MapTeleport(int map, int position)
 {
+#if 0
 	int i;
 	int j;
 	char fileName[100];
@@ -526,6 +537,7 @@ void SV_MapTeleport(int map, int position)
 	if (!netgame) {
 		SV_SaveGame(REBORN_SLOT, REBORN_DESCRIPTION);
 	}
+#endif
 }
 
 //==========================================================================
@@ -549,10 +561,13 @@ int SV_GetRebornSlot(void)
 
 boolean SV_RebornSlotAvailable(void)
 {
+#if 0
 	char fileName[100];
 
 	sprintf(fileName, "%shex%d.hxs", SavePath, REBORN_SLOT);
 	return ExistingFile(fileName);
+#endif
+	return true;
 }
 
 //==========================================================================
@@ -563,6 +578,7 @@ boolean SV_RebornSlotAvailable(void)
 
 void SV_LoadMap(void)
 {
+#if 0
 	char fileName[100];
 
 	// Load a base level
@@ -596,6 +612,7 @@ void SV_LoadMap(void)
 	// Free mobj list and save buffer
 	Z_Free(MobjList);
 	Z_Free(SaveBuffer);
+#endif
 }
 
 //==========================================================================
@@ -606,7 +623,9 @@ void SV_LoadMap(void)
 
 void SV_InitBaseSlot(void)
 {
+#if 0
 	ClearSaveSlot(BASE_SLOT);
+#endif
 }
 
 //==========================================================================
@@ -617,6 +636,7 @@ void SV_InitBaseSlot(void)
 
 static void ArchivePlayers(void)
 {
+#if 0
 	int i;
 	int j;
 	player_t tempPlayer;
@@ -640,6 +660,7 @@ static void ArchivePlayers(void)
 		}
 		StreamOutBuffer(&tempPlayer, sizeof(player_t));
 	}
+#endif
 }
 
 //==========================================================================
@@ -650,6 +671,7 @@ static void ArchivePlayers(void)
 
 static void UnarchivePlayers(void)
 {
+#if 0
 	int i, j;
 
 	AssertSegment(ASEG_PLAYERS);
@@ -674,6 +696,7 @@ static void UnarchivePlayers(void)
 			}
 		}
 	}
+#endif
 }
 
 //==========================================================================
@@ -684,6 +707,7 @@ static void UnarchivePlayers(void)
 
 static void ArchiveWorld(void)
 {
+#if 0
 	int i;
 	int j;
 	sector_t *sec;
@@ -721,6 +745,7 @@ static void ArchiveWorld(void)
 			StreamOutWord(si->midtexture);
 		}
 	}
+#endif
 }
 
 //==========================================================================
@@ -731,6 +756,7 @@ static void ArchiveWorld(void)
 
 static void UnarchiveWorld(void)
 {
+#if 0
 	int i;
 	int j;
 	sector_t *sec;
@@ -770,6 +796,7 @@ static void UnarchiveWorld(void)
 			si->midtexture = GET_WORD;
 		}
 	}
+#endif
 }
 
 //==========================================================================
@@ -783,6 +810,7 @@ static void UnarchiveWorld(void)
 
 static void SetMobjArchiveNums(void)
 {
+#if 0
 	mobj_t *mobj;
 	thinker_t *thinker;
 
@@ -798,6 +826,7 @@ static void SetMobjArchiveNums(void)
 			mobj->archiveNum = MobjCount++;
 		}
 	}
+#endif
 }
 
 //==========================================================================
@@ -808,6 +837,7 @@ static void SetMobjArchiveNums(void)
 
 static void ArchiveMobjs(void)
 {
+#if 0
 	int count;
 	thinker_t *thinker;
 	mobj_t tempMobj;
@@ -832,6 +862,7 @@ static void ArchiveMobjs(void)
 	if (count != MobjCount) {
 		I_Error("ArchiveMobjs: bad mobj count");
 	}
+#endif
 }
 
 //==========================================================================
@@ -842,6 +873,7 @@ static void ArchiveMobjs(void)
 
 static void UnarchiveMobjs(void)
 {
+#if 0
 	int i;
 	mobj_t *mobj;
 
@@ -864,6 +896,7 @@ static void UnarchiveMobjs(void)
 	}
 	P_CreateTIDList();
 	P_InitCreatureCorpseQueue(true); // true = scan for corpses
+#endif
 }
 
 //==========================================================================
@@ -874,6 +907,7 @@ static void UnarchiveMobjs(void)
 
 static void MangleMobj(mobj_t *mobj)
 {
+#if 0
 	unsigned int special1, special2;
 	boolean corpse;
 
@@ -934,6 +968,7 @@ static void MangleMobj(mobj_t *mobj)
 	default:
 		break;
 	}
+#endif
 }
 
 //==========================================================================
@@ -944,6 +979,7 @@ static void MangleMobj(mobj_t *mobj)
 
 static int GetMobjNum(mobj_t *mobj)
 {
+#if 0
 	if (mobj == NULL) {
 		return MOBJ_NULL;
 	}
@@ -951,6 +987,8 @@ static int GetMobjNum(mobj_t *mobj)
 		return MOBJ_XX_PLAYER;
 	}
 	return mobj->archiveNum;
+#endif
+	return 0;
 }
 
 //==========================================================================
@@ -961,6 +999,7 @@ static int GetMobjNum(mobj_t *mobj)
 
 static void RestoreMobj(mobj_t *mobj)
 {
+#if 0
 	mobj->state = &states[(int)mobj->state];
 	if (mobj->player) {
 		mobj->player = &players[(int)mobj->player - 1];
@@ -999,6 +1038,7 @@ static void RestoreMobj(mobj_t *mobj)
 	default:
 		break;
 	}
+#endif
 }
 
 //==========================================================================
@@ -1009,6 +1049,7 @@ static void RestoreMobj(mobj_t *mobj)
 
 static void SetMobjPtr(int *archiveNum)
 {
+#if 0
 	if (*archiveNum == MOBJ_NULL) {
 		*archiveNum = 0;
 		return;
@@ -1022,6 +1063,7 @@ static void SetMobjPtr(int *archiveNum)
 		return;
 	}
 	*archiveNum = (int)MobjList[*archiveNum];
+#endif
 }
 
 //==========================================================================
@@ -1032,6 +1074,7 @@ static void SetMobjPtr(int *archiveNum)
 
 static void ArchiveThinkers(void)
 {
+#if 0
 	thinker_t *thinker;
 	thinkInfo_t *info;
 	byte buffer[MAX_THINKER_SIZE];
@@ -1053,6 +1096,7 @@ static void ArchiveThinkers(void)
 	}
 	// Add a termination marker
 	StreamOutByte(TC_NULL);
+#endif
 }
 
 //==========================================================================
@@ -1063,6 +1107,7 @@ static void ArchiveThinkers(void)
 
 static void UnarchiveThinkers(void)
 {
+#if 0
 	int tClass;
 	thinker_t *thinker;
 	thinkInfo_t *info;
@@ -1088,6 +1133,7 @@ static void UnarchiveThinkers(void)
 				tClass);
 		}
 	}
+#endif
 }
 
 //==========================================================================
@@ -1098,7 +1144,9 @@ static void UnarchiveThinkers(void)
 
 static void MangleSSThinker(ssthinker_t *sst)
 {
+#if 0
 	sst->sector = (sector_t *)(sst->sector - sectors);
+#endif
 }
 
 //==========================================================================
@@ -1109,8 +1157,10 @@ static void MangleSSThinker(ssthinker_t *sst)
 
 static void RestoreSSThinker(ssthinker_t *sst)
 {
+#if 0
 	sst->sector = &sectors[(int)sst->sector];
 	sst->sector->specialdata = sst->thinker.function;
+#endif
 }
 
 //==========================================================================
@@ -1121,7 +1171,9 @@ static void RestoreSSThinker(ssthinker_t *sst)
 
 static void RestoreSSThinkerNoSD(ssthinker_t *sst)
 {
+#if 0
 	sst->sector = &sectors[(int)sst->sector];
+#endif
 }
 
 //==========================================================================
@@ -1132,10 +1184,12 @@ static void RestoreSSThinkerNoSD(ssthinker_t *sst)
 
 static void MangleScript(acs_t *script)
 {
+#if 0
 	script->ip = (int *)((int)(script->ip) - (int)ActionCodeBase);
 	script->line = script->line ? (line_t *)(script->line - lines) :
 				      (line_t *)-1;
 	script->activator = (mobj_t *)GetMobjNum(script->activator);
+#endif
 }
 
 //==========================================================================
@@ -1146,6 +1200,7 @@ static void MangleScript(acs_t *script)
 
 static void RestoreScript(acs_t *script)
 {
+#if 0
 	script->ip = (int *)(ActionCodeBase + (int)script->ip);
 	if ((int)script->line == -1) {
 		script->line = NULL;
@@ -1153,6 +1208,7 @@ static void RestoreScript(acs_t *script)
 		script->line = &lines[(int)script->line];
 	}
 	SetMobjPtr((int *)&script->activator);
+#endif
 }
 
 //==========================================================================
@@ -1207,6 +1263,7 @@ static void ArchiveScripts(void)
 
 static void UnarchiveScripts(void)
 {
+#if 0
 	int i;
 
 	AssertSegment(ASEG_SCRIPTS);
@@ -1216,6 +1273,7 @@ static void UnarchiveScripts(void)
 	}
 	memcpy(MapVars, SavePtr.b, sizeof(MapVars));
 	SavePtr.b += sizeof(MapVars);
+#endif
 }
 
 //==========================================================================
@@ -1226,12 +1284,14 @@ static void UnarchiveScripts(void)
 
 static void ArchiveMisc(void)
 {
+#if 0
 	int ix;
 
 	StreamOutLong(ASEG_MISC);
 	for (ix = 0; ix < MAXPLAYERS; ix++) {
 		StreamOutLong(localQuakeHappening[ix]);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1242,12 +1302,14 @@ static void ArchiveMisc(void)
 
 static void UnarchiveMisc(void)
 {
+#if 0
 	int ix;
 
 	AssertSegment(ASEG_MISC);
 	for (ix = 0; ix < MAXPLAYERS; ix++) {
 		localQuakeHappening[ix] = GET_LONG;
 	}
+#endif
 }
 
 //==========================================================================
@@ -1258,6 +1320,7 @@ static void UnarchiveMisc(void)
 
 static void RemoveAllThinkers(void)
 {
+#if 0
 	thinker_t *thinker;
 	thinker_t *nextThinker;
 
@@ -1272,6 +1335,7 @@ static void RemoveAllThinkers(void)
 		thinker = nextThinker;
 	}
 	P_InitThinkers();
+#endif
 }
 
 //==========================================================================
@@ -1282,6 +1346,7 @@ static void RemoveAllThinkers(void)
 
 static void ArchiveSounds(void)
 {
+#if 0
 	seqnode_t *node;
 	sector_t *sec;
 	int difference;
@@ -1316,6 +1381,7 @@ static void ArchiveSounds(void)
 		}
 		StreamOutLong(difference);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1326,6 +1392,7 @@ static void ArchiveSounds(void)
 
 static void UnarchiveSounds(void)
 {
+#if 0
 	int i;
 	int numSequences;
 	int sequence;
@@ -1360,6 +1427,7 @@ static void UnarchiveSounds(void)
 		SN_ChangeNodeData(i, seqOffset, delayTics, volume, soundID);
 		i++;
 	}
+#endif
 }
 
 //==========================================================================
@@ -1370,6 +1438,7 @@ static void UnarchiveSounds(void)
 
 static void ArchivePolyobjs(void)
 {
+#if 0
 	int i;
 
 	StreamOutLong(ASEG_POLYOBJS);
@@ -1380,6 +1449,7 @@ static void ArchivePolyobjs(void)
 		StreamOutLong(polyobjs[i].startSpot.x);
 		StreamOutLong(polyobjs[i].startSpot.y);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1390,6 +1460,7 @@ static void ArchivePolyobjs(void)
 
 static void UnarchivePolyobjs(void)
 {
+#if 0
 	int i;
 	fixed_t deltaX;
 	fixed_t deltaY;
@@ -1407,6 +1478,7 @@ static void UnarchivePolyobjs(void)
 		deltaY = GET_LONG - polyobjs[i].startSpot.y;
 		PO_MovePolyobj(polyobjs[i].tag, deltaX, deltaY);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1417,10 +1489,12 @@ static void UnarchivePolyobjs(void)
 
 static void AssertSegment(gameArchiveSegment_t segType)
 {
+#if 0
 	if (GET_LONG != segType) {
 		I_Error("Corrupt save game: Segment [%d] failed alignment check",
 			segType);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1433,6 +1507,7 @@ static void AssertSegment(gameArchiveSegment_t segType)
 
 static void ClearSaveSlot(int slot)
 {
+#if 0
 	int i;
 	char fileName[100];
 
@@ -1442,6 +1517,7 @@ static void ClearSaveSlot(int slot)
 	}
 	sprintf(fileName, "%shex%d.hxs", SavePath, slot);
 	remove(fileName);
+#endif
 }
 
 //==========================================================================
@@ -1454,6 +1530,7 @@ static void ClearSaveSlot(int slot)
 
 static void CopySaveSlot(int sourceSlot, int destSlot)
 {
+#if 0
 	int i;
 	char sourceName[100];
 	char destName[100];
@@ -1471,6 +1548,7 @@ static void CopySaveSlot(int sourceSlot, int destSlot)
 		sprintf(destName, "%shex%d.hxs", SavePath, destSlot);
 		CopyFile(sourceName, destName);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1481,12 +1559,14 @@ static void CopySaveSlot(int sourceSlot, int destSlot)
 
 static void CopyFile(char *sourceName, char *destName)
 {
+#if 0
 	int length;
 	byte *buffer;
 
 	length = M_ReadFile(sourceName, &buffer);
 	M_WriteFile(destName, buffer, length);
 	Z_Free(buffer);
+#endif
 }
 
 //==========================================================================
@@ -1497,6 +1577,7 @@ static void CopyFile(char *sourceName, char *destName)
 
 static boolean ExistingFile(char *name)
 {
+#if 0
 	FILE *fp;
 
 	if ((fp = fopen(name, "rb")) != NULL) {
@@ -1505,6 +1586,9 @@ static boolean ExistingFile(char *name)
 	} else {
 		return false;
 	}
+#endif
+
+	return false;
 }
 
 //==========================================================================
@@ -1515,7 +1599,9 @@ static boolean ExistingFile(char *name)
 
 static void OpenStreamOut(char *fileName)
 {
+#if 0
 	SavingFP = fopen(fileName, "wb");
+#endif
 }
 
 //==========================================================================
@@ -1526,9 +1612,11 @@ static void OpenStreamOut(char *fileName)
 
 static void CloseStreamOut(void)
 {
+#if 0
 	if (SavingFP) {
 		fclose(SavingFP);
 	}
+#endif
 }
 
 //==========================================================================
@@ -1539,7 +1627,9 @@ static void CloseStreamOut(void)
 
 static void StreamOutBuffer(void *buffer, int size)
 {
+#if 0
 	fwrite(buffer, size, 1, SavingFP);
+#endif
 }
 
 //==========================================================================
@@ -1550,7 +1640,9 @@ static void StreamOutBuffer(void *buffer, int size)
 
 static void StreamOutByte(byte val)
 {
+#if 0
 	fwrite(&val, sizeof(byte), 1, SavingFP);
+#endif
 }
 
 //==========================================================================
@@ -1561,7 +1653,9 @@ static void StreamOutByte(byte val)
 
 static void StreamOutWord(unsigned short val)
 {
+#if 0
 	fwrite(&val, sizeof(unsigned short), 1, SavingFP);
+#endif
 }
 
 //==========================================================================
@@ -1572,5 +1666,7 @@ static void StreamOutWord(unsigned short val)
 
 static void StreamOutLong(unsigned int val)
 {
+#if 0
 	fwrite(&val, sizeof(int), 1, SavingFP);
+#endif
 }
