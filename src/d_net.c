@@ -668,7 +668,9 @@ void D_CheckNetGame(void)
 	netbuffer = &doomcom->data;
 	consoleplayer = displayplayer = doomcom->consoleplayer;
 	pClass = PCLASS_FIGHTER;
-	if (i = M_CheckParm("-class")) {
+
+	i = M_CheckParm("-class");
+	if (i) {
 		pClass = atoi(myargv[i + 1]);
 		if (pClass > PCLASS_MAGE || pClass < PCLASS_FIGHTER) {
 			I_Error("Invalid player class: %d\n", pClass);
