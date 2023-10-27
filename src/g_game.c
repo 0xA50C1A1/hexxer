@@ -878,7 +878,8 @@ void G_PlayerExitMap(int playerNumber)
 	}
 
 	if (player->morphTics) {
-		player->readyweapon = player->mo->special1; // Restore weapon
+		player->readyweapon =
+			(weapontype_t)player->mo->special1.i; // Restore weapon
 		player->morphTics = 0;
 	}
 	player->messageTics = 0;

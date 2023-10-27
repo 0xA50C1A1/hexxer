@@ -524,7 +524,7 @@ void R_ProjectSprite(mobj_t *thing)
 		if (thing->player) {
 			vis->class = thing->player->class;
 		} else {
-			vis->class = thing->special1;
+			vis->class = (int)thing->special1.i;
 		}
 		if (vis->class > 2) {
 			vis->class = 0;
@@ -547,13 +547,6 @@ void R_ProjectSprite(mobj_t *thing)
 	if (vis->x1 > x1)
 		vis->startfrac += vis->xiscale * (vis->x1 - x1);
 	vis->patch = lump;
-	//
-	// get light level
-	//
-
-	//	if (thing->flags & MF_SHADOW)
-	//		vis->colormap = NULL;			// shadow draw
-	//	else ...
 
 	if (fixedcolormap)
 		vis->colormap = fixedcolormap; // fixed map

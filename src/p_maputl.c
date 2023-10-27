@@ -834,7 +834,7 @@ static mobj_t *RoughBlockCheck(mobj_t *mo, int index)
 					continue;
 				}
 				if ((link->type == MT_MINOTAUR) &&
-				    (((mobj_t *)link->special1) == mo)) {
+				    (link->special1.m == mo)) {
 					link = link->bnext;
 					continue;
 				}
@@ -849,7 +849,7 @@ static mobj_t *RoughBlockCheck(mobj_t *mo, int index)
 			link = link->bnext;
 		} else if (mo->type == MT_MINOTAUR) // looking around minotaur
 		{
-			master = (mobj_t *)mo->special1;
+			master = mo->special1.m;
 			if ((link->flags & MF_COUNTKILL) ||
 			    (link->player && (link != master))) {
 				if (!(link->flags & MF_SHOOTABLE)) {
@@ -861,7 +861,7 @@ static mobj_t *RoughBlockCheck(mobj_t *mo, int index)
 					continue;
 				}
 				if ((link->type == MT_MINOTAUR) &&
-				    (link->special1 == mo->special1)) {
+				    (link->special1.m == mo->special1.m)) {
 					link = link->bnext;
 					continue;
 				}

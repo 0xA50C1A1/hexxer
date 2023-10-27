@@ -1019,7 +1019,7 @@ mobj_t *ActiveMinotaur(player_t *master)
 		starttime = (unsigned int *)mo->args;
 		if ((leveltime - *starttime) >= MAULATORTICS)
 			continue;
-		plr = ((mobj_t *)mo->special1)->player;
+		plr = mo->special1.m->player;
 		if (plr == master)
 			return (mo);
 	}
@@ -1207,7 +1207,7 @@ void P_KillMobj(mobj_t *source, mobj_t *target)
 	}
 
 	if (target->type == MT_MINOTAUR) {
-		master = (mobj_t *)target->special1;
+		master = target->special1.m;
 		if (master->health > 0) {
 			if (!ActiveMinotaur(master->player)) {
 				master->player->powers[pw_minotaur] = 0;
@@ -1291,7 +1291,7 @@ boolean P_MorphPlayer(player_t *player)
 	fog = P_SpawnMobj(x, y, z + TELEFOGHEIGHT, MT_TFOG);
 	S_StartSound(fog, SFX_TELEPORT);
 	beastMo = P_SpawnMobj(x, y, z, MT_PIGPLAYER);
-	beastMo->special1 = player->readyweapon;
+	beastMo->special1.i = player->readyweapon;
 	beastMo->angle = angle;
 	beastMo->player = player;
 	player->health = beastMo->health = MAXMORPHHEALTH;
@@ -1348,8 +1348,8 @@ boolean P_MorphMonster(mobj_t *actor)
 	fog = P_SpawnMobj(x, y, z + TELEFOGHEIGHT, MT_TFOG);
 	S_StartSound(fog, SFX_TELEPORT);
 	monster = P_SpawnMobj(x, y, z, MT_PIG);
-	monster->special2 = moType;
-	monster->special1 = MORPHTICS + P_Random();
+	monster->special2.i = moType;
+	monster->special1.i = MORPHTICS + P_Random();
 	monster->flags |= (oldMonster.flags & MF_SHADOW);
 	monster->target = oldMonster.target;
 	monster->angle = oldMonster.angle;
@@ -1360,7 +1360,7 @@ boolean P_MorphMonster(mobj_t *actor)
 
 	// check for turning off minotaur power for active icon
 	if (moType == MT_MINOTAUR) {
-		master = (mobj_t *)oldMonster.special1;
+		master = oldMonster.special1.m;
 		if (master->health > 0) {
 			if (!ActiveMinotaur(master->player)) {
 				master->player->powers[pw_minotaur] = 0;
@@ -1537,7 +1537,7 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
 			damage >>= 1;
 			break;
 		case MT_SHARDFX1:
-			switch (inflictor->special2) {
+			switch (inflictor->special2.i) {
 			case 3:
 				damage <<= 3;
 				break;
@@ -1691,7 +1691,7 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
 		if (source &&
 		    (source->type ==
 		     MT_MINOTAUR)) { // Minotaur's kills go to his master
-			master = (mobj_t *)(source->special1);
+			master = source->special1.m;
 			// Make sure still alive and not a pointer to fighter head
 			if (master->player && (master->player->mo == master)) {
 				source = master;
@@ -1858,7 +1858,7 @@ void P_PoisonDamage(player_t *player, mobj_t *source, int damage,
 	//
 	target->health -= damage;
 	if (target->health <= 0) { // Death
-		target->special1 = damage;
+		target->special1.i = damage;
 		if (player && inflictor &&
 		    !player->morphTics) { // Check for flame death
 			if ((inflictor->flags2 & MF2_FIREDAMAGE) &&

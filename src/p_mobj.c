@@ -279,12 +279,12 @@ boolean P_SeekerMissile(mobj_t *actor, angle_t thresh, angle_t turnMax)
 	angle_t angle;
 	mobj_t *target;
 
-	target = (mobj_t *)actor->special1;
+	target = actor->special1.m;
 	if (target == NULL) {
 		return (false);
 	}
 	if (!(target->flags & MF_SHOOTABLE)) { // Target died
-		actor->special1 = 0;
+		actor->special1.m = NULL;
 		return (false);
 	}
 	dir = P_FaceMobj(actor, target, &delta);
@@ -520,8 +520,7 @@ void P_XYMovement(mobj_t *mo)
 							 finesine[angle]);
 					//					mo->momz = -mo->momz;
 					if (mo->flags2 & MF2_SEEKERMISSILE) {
-						mo->special1 =
-							(int)(mo->target);
+						mo->special1.m = mo->target;
 					}
 					mo->target = BlockingMobj;
 					return;
@@ -877,8 +876,8 @@ void P_BlasterMobjThinker(mobj_t *mobj)
 					}
 					P_SpawnMobj(mobj->x, mobj->y, z,
 						    MT_MWANDSMOKE);
-				} else if (!--mobj->special1) {
-					mobj->special1 = 4;
+				} else if (!--mobj->special1.i) {
+					mobj->special1.i = 4;
 					z = mobj->z - 12 * FRACUNIT;
 					if (z < mobj->floorz) {
 						z = mobj->floorz;
@@ -966,7 +965,7 @@ void P_MobjThinker(mobj_t *mobj)
 	}
 	if (mobj->flags2 &
 	    MF2_FLOATBOB) { // Floating item bobbing motion (special1 is height)
-		mobj->z = mobj->floorz + mobj->special1 +
+		mobj->z = mobj->floorz + (int)mobj->special1.i +
 			  FloatBobOffsets[(mobj->health++) & 63];
 	} else if ((mobj->z != mobj->floorz) || mobj->momz ||
 		   BlockingMobj) { // Handle Z momentum and gravity
@@ -1364,7 +1363,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	if (mobj->flags2 &
 	    MF2_FLOATBOB) { // Seed random starting index for bobbing motion
 		mobj->health = P_Random();
-		mobj->special1 = mthing->height << FRACBITS;
+		mobj->special1.i = mthing->height << FRACBITS;
 	}
 	if (mobj->tics > 0) {
 		mobj->tics = 1 + (P_Random() % mobj->tics);

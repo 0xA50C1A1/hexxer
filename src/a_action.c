@@ -263,7 +263,7 @@ void A_LeafSpawn(mobj_t *actor)
 			P_ThrustMobj(mo, actor->angle,
 				     (P_Random() << 9) + 3 * FRACUNIT);
 			mo->target = actor;
-			mo->special1 = 0;
+			mo->special1.i = 0;
 		}
 	}
 }
@@ -290,8 +290,8 @@ void A_LeafThrust(mobj_t *actor)
 
 void A_LeafCheck(mobj_t *actor)
 {
-	actor->special1++;
-	if (actor->special1 >= 20) {
+	actor->special1.i++;
+	if (actor->special1.i >= 20) {
 		P_SetMobjState(actor, S_NULL);
 		return;
 	}
@@ -319,7 +319,7 @@ void A_LeafCheck(mobj_t *actor)
 
 void A_BridgeOrbit(mobj_t *actor)
 {
-	if (actor->target->special1) {
+	if (actor->target->special1.i) {
 		P_SetMobjState(actor, S_NULL);
 	}
 	actor->args[0] += 3;
@@ -340,7 +340,7 @@ void A_BridgeInit(mobj_t *actor)
 	cy = actor->y;
 	cz = actor->z;
 	startangle = P_Random();
-	actor->special1 = 0;
+	actor->special1.i = 0;
 
 	// Spawn triad into world
 	ball1 = P_SpawnMobj(cx, cy, cz, MT_BRIDGEBALL);
@@ -362,7 +362,7 @@ void A_BridgeInit(mobj_t *actor)
 
 void A_BridgeRemove(mobj_t *actor)
 {
-	actor->special1 = true; // Removing the bridge
+	actor->special1.i = true; // Removing the bridge
 	actor->flags &= ~MF_SOLID;
 	P_SetMobjState(actor, S_FREE_BRIDGE1);
 }
@@ -487,7 +487,7 @@ void A_Summon(mobj_t *actor)
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_MINOTAUR);
 	if (mo) {
 		if (P_TestMobjLocation(mo) == false ||
-		    !actor->special1) { // Didn't fit - change back to artifact
+		    !actor->special1.m) { // Didn't fit - change back to artifact
 			P_SetMobjState(mo, S_NULL);
 			mo = P_SpawnMobj(actor->x, actor->y, actor->z,
 					 MT_SUMMONMAULATOR);
@@ -497,12 +497,13 @@ void A_Summon(mobj_t *actor)
 		}
 
 		memcpy((void *)mo->args, &leveltime, sizeof(leveltime));
-		master = (mobj_t *)actor->special1;
+		master = actor->special1.m;
 		if (master->flags & MF_CORPSE) { // Master dead
-			mo->special1 = 0; // No master
+			mo->special1.m = NULL; // No master
 		} else {
-			mo->special1 =
-				actor->special1; // Pointer to master (mobj_t *)
+			mo->special1.m =
+				actor->special1
+					.m; // Pointer to master (mobj_t *)
 			P_GivePower(master->player, pw_minotaur);
 		}
 
@@ -530,10 +531,10 @@ void A_FogSpawn(mobj_t *actor)
 	mobj_t *mo = NULL;
 	angle_t delta;
 
-	if (actor->special1-- > 0)
+	if (actor->special1.i-- > 0)
 		return;
 
-	actor->special1 = actor->args[2]; // Reset frequency count
+	actor->special1.i = actor->args[2]; // Reset frequency count
 
 	switch (P_Random() % 3) {
 	case 0:
@@ -560,7 +561,7 @@ void A_FogSpawn(mobj_t *actor)
 			(P_Random() % (actor->args[0])) + 1; // Random speed
 		mo->args[3] = actor->args[3]; // Set lifetime
 		mo->args[4] = 1; // Set to moving
-		mo->special2 = P_Random() & 63;
+		mo->special2.i = P_Random() & 63;
 	}
 }
 
@@ -579,9 +580,9 @@ void A_FogMove(mobj_t *actor)
 	}
 
 	if ((actor->args[3] % 4) == 0) {
-		weaveindex = actor->special2;
+		weaveindex = (int)actor->special2.i;
 		actor->z += FloatBobOffsets[weaveindex] >> 1;
-		actor->special2 = (weaveindex + 1) & 63;
+		actor->special2.i = (weaveindex + 1) & 63;
 	}
 
 	angle = actor->angle >> ANGLETOFINESHIFT;
@@ -605,8 +606,8 @@ void A_PoisonBagInit(mobj_t *actor)
 		return;
 	}
 	mo->momx = 1; // missile objects must move to impact other objects
-	mo->special1 = 24 + (P_Random() & 7);
-	mo->special2 = 0;
+	mo->special1.i = 24 + (P_Random() & 7);
+	mo->special2.i = 0;
 	mo->target = actor->target;
 	mo->radius = 20 * FRACUNIT;
 	mo->height = 30 * FRACUNIT;
@@ -621,7 +622,7 @@ void A_PoisonBagInit(mobj_t *actor)
 
 void A_PoisonBagCheck(mobj_t *actor)
 {
-	if (!--actor->special1) {
+	if (!--actor->special1.i) {
 		P_SetMobjState(actor, S_POISONCLOUD_X1);
 	} else {
 		return;
@@ -642,9 +643,9 @@ void A_PoisonBagDamage(mobj_t *actor)
 
 	A_Explode(actor);
 
-	bobIndex = actor->special2;
+	bobIndex = (int)actor->special2.i;
 	actor->z += FloatBobOffsets[bobIndex] >> 4;
-	actor->special2 = (bobIndex + 1) & 63;
+	actor->special2.i = (bobIndex + 1) & 63;
 }
 
 //===========================================================================
@@ -792,7 +793,7 @@ void A_TeloSpawnA(mobj_t *actor)
 
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_TELOTHER_FX2);
 	if (mo) {
-		mo->special1 = TELEPORT_LIFE; // Lifetime countdown
+		mo->special1.i = TELEPORT_LIFE; // Lifetime countdown
 		mo->angle = actor->angle;
 		mo->target = actor->target;
 		mo->momx = actor->momx >> 1;
@@ -807,7 +808,7 @@ void A_TeloSpawnB(mobj_t *actor)
 
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_TELOTHER_FX3);
 	if (mo) {
-		mo->special1 = TELEPORT_LIFE; // Lifetime countdown
+		mo->special1.i = TELEPORT_LIFE; // Lifetime countdown
 		mo->angle = actor->angle;
 		mo->target = actor->target;
 		mo->momx = actor->momx >> 1;
@@ -822,7 +823,7 @@ void A_TeloSpawnC(mobj_t *actor)
 
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_TELOTHER_FX4);
 	if (mo) {
-		mo->special1 = TELEPORT_LIFE; // Lifetime countdown
+		mo->special1.i = TELEPORT_LIFE; // Lifetime countdown
 		mo->angle = actor->angle;
 		mo->target = actor->target;
 		mo->momx = actor->momx >> 1;
@@ -837,7 +838,7 @@ void A_TeloSpawnD(mobj_t *actor)
 
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_TELOTHER_FX5);
 	if (mo) {
-		mo->special1 = TELEPORT_LIFE; // Lifetime countdown
+		mo->special1.i = TELEPORT_LIFE; // Lifetime countdown
 		mo->angle = actor->angle;
 		mo->target = actor->target;
 		mo->momx = actor->momx >> 1;
@@ -848,7 +849,7 @@ void A_TeloSpawnD(mobj_t *actor)
 
 void A_CheckTeleRing(mobj_t *actor)
 {
-	if (actor->special1-- <= 0) {
+	if (actor->special1.i-- <= 0) {
 		P_SetMobjState(actor, actor->info->deathstate);
 	}
 }
@@ -907,24 +908,24 @@ void P_SpawnDirt(mobj_t *actor, fixed_t radius)
 
 void A_ThrustInitUp(mobj_t *actor)
 {
-	actor->special2 = 5; // Raise speed
+	actor->special2.i = 5; // Raise speed
 	actor->args[0] = 1; // Mark as up
 	actor->floorclip = 0;
 	actor->flags = MF_SOLID;
 	actor->flags2 = MF2_NOTELEPORT | MF2_FLOORCLIP;
-	actor->special1 = 0L;
+	actor->special1.m = NULL;
 }
 
 void A_ThrustInitDn(mobj_t *actor)
 {
 	mobj_t *mo;
-	actor->special2 = 5; // Raise speed
+	actor->special2.i = 5; // Raise speed
 	actor->args[0] = 0; // Mark as down
 	actor->floorclip = actor->info->height;
 	actor->flags = 0;
 	actor->flags2 = MF2_NOTELEPORT | MF2_FLOORCLIP | MF2_DONTDRAW;
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_DIRTCLUMP);
-	actor->special1 = (int)mo;
+	actor->special1.m = mo;
 }
 
 void A_ThrustRaise(mobj_t *actor)
@@ -938,15 +939,15 @@ void A_ThrustRaise(mobj_t *actor)
 	}
 
 	// Lose the dirt clump
-	if ((actor->floorclip < actor->height) && actor->special1) {
-		P_RemoveMobj((mobj_t *)actor->special1);
-		actor->special1 = 0;
+	if ((actor->floorclip < actor->height) && actor->special1.m) {
+		P_RemoveMobj(actor->special1.m);
+		actor->special1.m = NULL;
 	}
 
 	// Spawn some dirt
 	if (P_Random() < 40)
 		P_SpawnDirt(actor, actor->radius);
-	actor->special2++; // Increase raise speed
+	actor->special2.i++; // Increase raise speed
 }
 
 void A_ThrustLower(mobj_t *actor)
@@ -1062,7 +1063,7 @@ void A_FlameCheck(mobj_t *actor)
 
 void A_BatSpawnInit(mobj_t *actor)
 {
-	actor->special1 = 0; // Frequency count
+	actor->special1.i = 0; // Frequency count
 }
 
 void A_BatSpawn(mobj_t *actor)
@@ -1072,9 +1073,9 @@ void A_BatSpawn(mobj_t *actor)
 	angle_t angle;
 
 	// Countdown until next spawn
-	if (actor->special1-- > 0)
+	if (actor->special1.i-- > 0)
 		return;
-	actor->special1 = actor->args[0]; // Reset frequency count
+	actor->special1.i = actor->args[0]; // Reset frequency count
 
 	delta = actor->args[1];
 	if (delta == 0)
@@ -1084,7 +1085,7 @@ void A_BatSpawn(mobj_t *actor)
 	if (mo) {
 		mo->args[0] = P_Random() & 63; // floatbob index
 		mo->args[4] = actor->args[4]; // turn degrees
-		mo->special2 = actor->args[3] << 3; // Set lifetime
+		mo->special2.i = actor->args[3] << 3; // Set lifetime
 		mo->target = actor;
 	}
 }
@@ -1094,10 +1095,10 @@ void A_BatMove(mobj_t *actor)
 	angle_t newangle;
 	fixed_t speed;
 
-	if (actor->special2 < 0) {
+	if (actor->special2.i < 0) {
 		P_SetMobjState(actor, actor->info->deathstate);
 	}
-	actor->special2 -= 2; // Called every 2 tics
+	actor->special2.i -= 2; // Called every 2 tics
 
 	if (P_Random() < 128) {
 		newangle = actor->angle + ANGLE_1 * actor->args[4];

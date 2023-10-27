@@ -874,6 +874,7 @@ static void UnarchiveMobjs(void)
 
 static void MangleMobj(mobj_t *mobj)
 {
+	unsigned int special1, special2;
 	boolean corpse;
 
 	corpse = mobj->flags & MF_CORPSE;
@@ -882,9 +883,9 @@ static void MangleMobj(mobj_t *mobj)
 		mobj->player = (player_t *)((mobj->player - players) + 1);
 	}
 	if (corpse) {
-		mobj->target = (mobj_t *)MOBJ_NULL;
+		special1 = MOBJ_NULL;
 	} else {
-		mobj->target = (mobj_t *)GetMobjNum(mobj->target);
+		special1 = GetMobjNum(mobj->target);
 	}
 	switch (mobj->type) {
 	// Just special1
@@ -897,9 +898,9 @@ static void MangleMobj(mobj_t *mobj)
 	case MT_SORCFX1:
 	case MT_MSTAFF_FX2:
 		if (corpse) {
-			mobj->special1 = MOBJ_NULL;
+			special1 = MOBJ_NULL;
 		} else {
-			mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
+			special1 = GetMobjNum(mobj->special1.m);
 		}
 		break;
 
@@ -907,9 +908,9 @@ static void MangleMobj(mobj_t *mobj)
 	case MT_LIGHTNING_FLOOR:
 	case MT_LIGHTNING_ZAP:
 		if (corpse) {
-			mobj->special2 = MOBJ_NULL;
+			special2 = MOBJ_NULL;
 		} else {
-			mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
+			special2 = GetMobjNum(mobj->special2.m);
 		}
 		break;
 
@@ -917,17 +918,17 @@ static void MangleMobj(mobj_t *mobj)
 	case MT_HOLY_TAIL:
 	case MT_LIGHTNING_CEILING:
 		if (corpse) {
-			mobj->special1 = MOBJ_NULL;
-			mobj->special2 = MOBJ_NULL;
+			special1 = MOBJ_NULL;
+			special2 = MOBJ_NULL;
 		} else {
-			mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
-			mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
+			special1 = GetMobjNum(mobj->special1.m);
+			special2 = GetMobjNum(mobj->special2.m);
 		}
 		break;
 
 	// Miscellaneous
 	case MT_KORAX:
-		mobj->special1 = 0; // Searching index
+		special1 = 0; // Searching index
 		break;
 
 	default:
