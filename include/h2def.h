@@ -676,8 +676,6 @@ extern boolean ravpic; // checkparm of -ravpic
 
 extern boolean altpal; // checkparm to use an alternate palette routine
 
-extern boolean cdrom; // true if cd-rom mode active ("-cdrom")
-
 extern boolean deathmatch; // only if started as net death
 
 extern boolean netgame; // only true if >1 player

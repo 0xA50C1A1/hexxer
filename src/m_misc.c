@@ -476,8 +476,6 @@ void M_LoadDefaults(char *fileName)
 	if (i && i < myargc - 1) {
 		strcpy(defaultfile, myargv[i + 1]);
 		ST_Message("config file: %s\n", defaultfile);
-	} else if (cdrom) {
-		sprintf(defaultfile, "c:\\hexndata\\%s", fileName);
 	} else {
 		strcpy(defaultfile, fileName);
 	}
