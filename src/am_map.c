@@ -550,7 +550,7 @@ void AM_clearFB(int color)
 boolean AM_clipMline(mline_t *ml, fline_t *fl)
 {
 	enum { LEFT = 1, RIGHT = 2, BOTTOM = 4, TOP = 8 };
-	register outcode1 = 0, outcode2 = 0, outside;
+	int outcode1 = 0, outcode2 = 0, outside;
 	fpoint_t tmp;
 	int dx, dy;
 
