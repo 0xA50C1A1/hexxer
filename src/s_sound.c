@@ -176,25 +176,26 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	int priority;
 	int sep;
 	int angle;
-	int absx;
-	int absy;
+	int absx = 0;
+	int absy = 0;
 
 	static int sndcount = 0;
 	int chan;
 
 	if (sound_id == 0 || snd_MaxVolume == 0)
 		return;
-	if (origin == NULL) {
-		origin = players[displayplayer].mo;
-	}
+
 	if (volume == 0) {
 		return;
 	}
 
-	// calculate the distance before other stuff so that we can throw out
-	// sounds that are beyond the hearing range.
-	absx = abs(origin->x - players[displayplayer].mo->x);
-	absy = abs(origin->y - players[displayplayer].mo->y);
+	if (origin) {
+		// calculate the distance before other stuff so that we can throw out
+		// sounds that are beyond the hearing range.
+		absx = abs(origin->x - players[displayplayer].mo->x);
+		absy = abs(origin->y - players[displayplayer].mo->y);
+	}
+
 	dist = absx + absy - (absx > absy ? absy >> 1 : absx >> 1);
 	dist >>= FRACBITS;
 	if (dist >= MAX_SND_DIST) {
@@ -209,7 +210,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		return; // other sounds have greater priority
 	}
 	for (i = 0; i < snd_Channels; i++) {
-		if (origin->player) {
+		if (!origin || origin->player) {
 			i = snd_Channels;
 			break; // let the player have more than one sound.
 		}
