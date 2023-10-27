@@ -184,7 +184,9 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 
 	if (sound_id == 0 || snd_MaxVolume == 0)
 		return;
-
+	if (origin == NULL) {
+		origin = players[displayplayer].mo;
+	}
 	if (volume == 0) {
 		return;
 	}
@@ -264,6 +266,8 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		S_sfx[sound_id].snd_ptr =
 			W_CacheLumpNum(S_sfx[sound_id].lumpnum, PU_SOUND);
 	}
+
+	Channel[i].mo = origin;
 
 	vol = (SoundCurve[dist] * (snd_MaxVolume * 8) * volume) >> 14;
 	if (origin == players[displayplayer].mo) {
@@ -460,7 +464,7 @@ void S_UpdateSounds(mobj_t *listener)
 			Channel[i].sound_id = 0;
 		}
 		if (Channel[i].mo == NULL || Channel[i].sound_id == 0 ||
-		    Channel[i].mo == listener) {
+		    Channel[i].mo == listener || listener == NULL) {
 			continue;
 		} else {
 			absx = abs(Channel[i].mo->x - listener->x);
