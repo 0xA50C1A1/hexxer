@@ -6,6 +6,7 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include <SDL2/SDL_stdinc.h>
 #include <h2def.h>
 #include <i_sound.h>
 #include <r_local.h>
@@ -621,7 +622,8 @@ void S_InitScript(void)
 		if (*sc_String == '$') {
 			if (!strcasecmp(sc_String, "$ARCHIVEPATH")) {
 				SC_MustGetString();
-				strcpy(ArchivePath, sc_String);
+				SDL_strlcpy(ArchivePath, sc_String,
+					    sizeof(ArchivePath));
 			} else if (!strcasecmp(sc_String, "$MAP")) {
 				SC_MustGetNumber();
 				SC_MustGetString();
@@ -635,11 +637,15 @@ void S_InitScript(void)
 				if (!strcmp(S_sfx[i].tagName, sc_String)) {
 					SC_MustGetString();
 					if (*sc_String != '?') {
-						strcpy(S_sfx[i].lumpname,
-						       sc_String);
+						SDL_strlcpy(
+							S_sfx[i].lumpname,
+							sc_String,
+							sizeof(S_sfx[i].lumpname));
 					} else {
-						strcpy(S_sfx[i].lumpname,
-						       "default");
+						SDL_strlcpy(
+							S_sfx[i].lumpname,
+							"default",
+							sizeof(S_sfx[i].lumpname));
 					}
 					break;
 				}
@@ -653,7 +659,8 @@ void S_InitScript(void)
 
 	for (i = 0; i < NUMSFX; i++) {
 		if (!strcmp(S_sfx[i].lumpname, "")) {
-			strcpy(S_sfx[i].lumpname, "default");
+			SDL_strlcpy(S_sfx[i].lumpname, "default",
+				    sizeof(S_sfx[i].lumpname));
 		}
 	}
 }

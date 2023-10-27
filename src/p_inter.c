@@ -56,13 +56,10 @@ void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 	if ((player->ultimateMessage || !messageson) && !ultmsg) {
 		return;
 	}
-	if (strlen(message) > 79) {
-		memcpy(player->message, message, 80);
-		player->message[80] = 0;
-	} else {
-		strcpy(player->message, message);
-	}
+
+	SDL_strlcpy(player->message, message, sizeof(player->message));
 	SDL_strupr(player->message);
+
 	player->messageTics = MESSAGETICS;
 	player->yellowMessage = false;
 	if (ultmsg) {
@@ -86,12 +83,9 @@ void P_SetYellowMessage(player_t *player, char *message, boolean ultmsg)
 	if ((player->ultimateMessage || !messageson) && !ultmsg) {
 		return;
 	}
-	if (strlen(message) > 79) {
-		memcpy(player->message, message, 80);
-		player->message[80] = 0;
-	} else {
-		strcpy(player->message, message);
-	}
+
+	SDL_strlcpy(player->message, message, sizeof(player->message));
+
 	player->messageTics = 5 * MESSAGETICS; // Bold messages last longer
 	player->yellowMessage = true;
 	if (ultmsg) {

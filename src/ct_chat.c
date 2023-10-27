@@ -10,10 +10,11 @@
 //**
 //**************************************************************************
 
+#include <SDL2/SDL_stdinc.h>
 #include <string.h>
 #include <ctype.h>
-#include "h2def.h"
-#include "p_local.h"
+#include <h2def.h>
+#include <p_local.h>
 #include <s_sound.h>
 
 #define NUMKEYS 256
@@ -262,11 +263,14 @@ void CT_Ticker(void)
 					i,
 					0); // set the end of message character
 				if (numplayers > 2) {
-					strcpy(plr_lastmsg[i],
-					       CT_FromPlrText[i]);
-					strcat(plr_lastmsg[i], chat_msg[i]);
+					SDL_strlcpy(plr_lastmsg[i],
+						    CT_FromPlrText[i],
+						    sizeof(plr_lastmsg[i]));
+					SDL_strlcat(plr_lastmsg[i], chat_msg[i],
+						    sizeof(plr_lastmsg[i]));
 				} else {
-					strcpy(plr_lastmsg[i], chat_msg[i]);
+					SDL_strlcpy(plr_lastmsg[i], chat_msg[i],
+						    sizeof(plr_lastmsg[i]));
 				}
 				if (i != consoleplayer &&
 				    (chat_dest[i] == consoleplayer + 1 ||

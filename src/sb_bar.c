@@ -1610,8 +1610,6 @@ static void CheatWarpFunc(player_t *player, Cheat_t *cheat)
 	int ones;
 	int map;
 	char mapName[9];
-	char auxName[128];
-	FILE *fp;
 
 	tens = cheat->args[0] - '0';
 	ones = cheat->args[1] - '0';
@@ -1630,7 +1628,7 @@ static void CheatWarpFunc(player_t *player, Cheat_t *cheat)
 		return;
 	}
 
-	sprintf(mapName, "MAP%02d", map);
+	snprintf(mapName, sizeof(mapName), "MAP%02d", map);
 	if (W_CheckNumForName(mapName) == -1) { // Can't find
 		P_SetMessage(player, TXT_CHEATNOMAP, true);
 		return;
@@ -1658,7 +1656,7 @@ static void CheatMassacreFunc(player_t *player, Cheat_t *cheat)
 	char buffer[80];
 
 	count = P_Massacre();
-	sprintf(buffer, "%d MONSTERS KILLED\n", count);
+	snprintf(buffer, sizeof(buffer), "%d MONSTERS KILLED\n", count);
 	P_SetMessage(player, buffer, true);
 }
 
@@ -1728,9 +1726,10 @@ static void CheatVersionFunc(player_t *player, Cheat_t *cheat)
 static void CheatDebugFunc(player_t *player, Cheat_t *cheat)
 {
 	char textBuffer[50];
-	sprintf(textBuffer, "MAP %d (%d)  X:%5d  Y:%5d  Z:%5d",
-		P_GetMapWarpTrans(gamemap), gamemap, player->mo->x >> FRACBITS,
-		player->mo->y >> FRACBITS, player->mo->z >> FRACBITS);
+	snprintf(textBuffer, sizeof(textBuffer),
+		 "MAP %d (%d)  X:%5d  Y:%5d  Z:%5d", P_GetMapWarpTrans(gamemap),
+		 gamemap, player->mo->x >> FRACBITS, player->mo->y >> FRACBITS,
+		 player->mo->z >> FRACBITS);
 	P_SetMessage(player, textBuffer, true);
 }
 
@@ -1761,7 +1760,8 @@ static void CheatScriptFunc3(player_t *player, Cheat_t *cheat)
 	args[0] = args[1] = args[2] = 0;
 
 	if (P_StartACS(script, 0, args, player->mo, NULL, 0)) {
-		sprintf(textBuffer, "RUNNING SCRIPT %.2d", script);
+		snprintf(textBuffer, sizeof(textBuffer), "RUNNING SCRIPT %.2d",
+			 script);
 		P_SetMessage(player, textBuffer, true);
 	}
 }

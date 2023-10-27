@@ -133,7 +133,7 @@ static void W_AddFile(const char *filename)
 		lump_p->handle = handle;
 		lump_p->position = LONG(fileinfo->filepos);
 		lump_p->size = LONG(fileinfo->size);
-		strncpy(lump_p->name, fileinfo->name, 8);
+		strncpy(lump_p->name, fileinfo->name, sizeof(lump_p->name));
 	}
 	if (freeFileInfo) {
 		free(freeFileInfo);

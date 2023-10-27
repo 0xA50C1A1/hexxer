@@ -745,7 +745,6 @@ extern byte *screen; // off screen work buffer, from V_video.c
 
 extern boolean singledemo; // quit after playing a demo from cmdline
 
-extern FILE *debugfile;
 extern int bodyqueslot;
 extern skill_t startskill;
 extern int startepisode;

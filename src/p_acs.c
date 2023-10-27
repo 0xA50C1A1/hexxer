@@ -12,8 +12,9 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#include "h2def.h"
-#include "p_local.h"
+#include <SDL2/SDL_stdinc.h>
+#include <h2def.h>
+#include <p_local.h>
 #include <i_system.h>
 #include <m_random.h>
 
@@ -401,8 +402,8 @@ boolean P_StartACS(int number, int map, byte *args, mobj_t *activator,
 	}
 	infoIndex = GetACSIndex(number);
 	if (infoIndex == -1) { // Script not found
-		sprintf(ErrorMsg, "P_STARTACS ERROR: UNKNOWN SCRIPT %d",
-			number);
+		snprintf(ErrorMsg, sizeof(ErrorMsg),
+			 "P_STARTACS ERROR: UNKNOWN SCRIPT %d", number);
 		P_SetMessage(&players[consoleplayer], ErrorMsg, true);
 	}
 	statePtr = &ACSInfo[infoIndex].state;
@@ -488,8 +489,9 @@ boolean P_StartLockedACS(line_t *line, byte *args, mobj_t *mo, int side)
 	}
 	if (lock) {
 		if (!(mo->player->keys & (1 << (lock - 1)))) {
-			sprintf(LockedBuffer, "YOU NEED THE %s\n",
-				TextKeyMessages[lock - 1]);
+			snprintf(LockedBuffer, sizeof(LockedBuffer),
+				 "YOU NEED THE %s\n",
+				 TextKeyMessages[lock - 1]);
 			P_SetMessage(mo->player, LockedBuffer, true);
 			S_StartSound(mo, SFX_DOOR_LOCKED);
 			return false;
@@ -1508,7 +1510,7 @@ static int CmdEndPrintBold(void)
 
 static int CmdPrintString(void)
 {
-	strcat(PrintBuffer, ACStrings[Pop()]);
+	SDL_strlcat(PrintBuffer, ACStrings[Pop()], sizeof(PrintBuffer));
 	return SCRIPT_CONTINUE;
 }
 
@@ -1516,8 +1518,8 @@ static int CmdPrintNumber(void)
 {
 	char tempStr[16];
 
-	sprintf(tempStr, "%d", Pop());
-	strcat(PrintBuffer, tempStr);
+	snprintf(tempStr, sizeof(tempStr), "%d", Pop());
+	SDL_strlcat(PrintBuffer, tempStr, sizeof(PrintBuffer));
 	return SCRIPT_CONTINUE;
 }
 

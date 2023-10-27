@@ -12,13 +12,13 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include <SDL2/SDL_stdinc.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <ctype.h>
-#include "h2def.h"
+#include <h2def.h>
 #include <s_sound.h>
 #include <i_system.h>
 
@@ -474,10 +474,10 @@ void M_LoadDefaults(char *fileName)
 	// Check for a custom config file
 	i = M_CheckParm("-config");
 	if (i && i < myargc - 1) {
-		strcpy(defaultfile, myargv[i + 1]);
+		SDL_strlcpy(defaultfile, myargv[i + 1], sizeof(defaultfile));
 		ST_Message("config file: %s\n", defaultfile);
 	} else {
-		strcpy(defaultfile, fileName);
+		SDL_strlcpy(defaultfile, fileName, sizeof(defaultfile));
 	}
 
 	// Scan the config file
@@ -494,12 +494,13 @@ void M_LoadDefaults(char *fileName)
 					if (newstring == NULL)
 						I_Error("can't malloc newstring");
 					strparm[len - 1] = 0;
-					strcpy(newstring, strparm + 1);
+					SDL_strlcpy(newstring, strparm + 1,
+						    sizeof(newstring));
 				} else if (strparm[0] == '0' &&
 					   strparm[1] == 'x') {
-					sscanf(strparm + 2, "%x", &parm);
+					parm = strtol(strparm + 2, NULL, 16);
 				} else {
-					sscanf(strparm, "%i", &parm);
+					parm = strtol(strparm, NULL, 10);
 				}
 				for (i = 0; i < numdefaults; i++) {
 					if (!strcmp(def, defaults[i].name)) {
@@ -508,7 +509,8 @@ void M_LoadDefaults(char *fileName)
 								parm;
 						} else {
 							*defaults[i].location =
-								(int)newstring;
+								(intptr_t)
+									newstring;
 						}
 						break;
 					}

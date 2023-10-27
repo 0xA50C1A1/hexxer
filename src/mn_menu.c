@@ -12,9 +12,10 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include <SDL2/SDL_stdinc.h>
 #include <ctype.h>
-#include "h2def.h"
-#include "p_local.h"
+#include <h2def.h>
+#include <p_local.h>
 #include <s_sound.h>
 #include <i_system.h>
 #include <i_video.h>
@@ -602,7 +603,7 @@ void MN_LoadSlotText(void)
 
 	for (slot = 0; slot < 6; slot++) {
 		found = false;
-		sprintf(name, "%shex%d.hxs", SavePath, slot);
+		snprintf(name, sizeof(name), "%shex%d.hxs", SavePath, slot);
 		fp = fopen(name, "rb");
 		if (fp) {
 			fread(description, HXS_DESCRIPTION_LENGTH, 1, fp);
@@ -803,7 +804,7 @@ static void SCSaveGame(int option)
 
 	if (!FileMenuKeySteal) {
 		FileMenuKeySteal = true;
-		strcpy(oldSlotText, SlotText[option]);
+		SDL_strlcpy(oldSlotText, SlotText[option], sizeof(oldSlotText));
 		ptr = SlotText[option];
 		while (*ptr) {
 			ptr++;
@@ -1350,7 +1351,8 @@ boolean MN_Responder(event_t *event)
 		}
 		if (key == KEY_ESCAPE) {
 			memset(SlotText[currentSlot], 0, SLOTTEXTLEN + 2);
-			strcpy(SlotText[currentSlot], oldSlotText);
+			SDL_strlcpy(SlotText[currentSlot], oldSlotText,
+				    sizeof(SlotText[currentSlot]));
 			SlotStatus[currentSlot]--;
 			MN_DeactivateMenu();
 			return (true);

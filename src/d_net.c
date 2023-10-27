@@ -12,8 +12,10 @@
 //**
 //**************************************************************************
 
-#include "h2def.h"
-#include "p_local.h"
+#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_log.h>
+#include <h2def.h>
+#include <p_local.h>
 #include <stdlib.h> // for atoi()
 #include <i_system.h>
 #include <i_video.h>
@@ -137,21 +139,6 @@ void HSendPacket(int node, int flags)
 	doomcom->remotenode = node;
 	doomcom->datalength = NetbufferSize();
 
-	if (debugfile) {
-		int i;
-		int realretrans;
-		if (netbuffer->checksum & NCMD_RETRANSMIT)
-			realretrans = ExpandTics(netbuffer->retransmitfrom);
-		else
-			realretrans = -1;
-		fprintf(debugfile, "send (%i + %i, R %i) [%i] ",
-			ExpandTics(netbuffer->starttic), netbuffer->numtics,
-			realretrans, doomcom->datalength);
-		for (i = 0; i < doomcom->datalength; i++)
-			fprintf(debugfile, "%i ", ((byte *)netbuffer)[i]);
-		fprintf(debugfile, "\n");
-	}
-
 	I_NetCmd();
 }
 
@@ -216,41 +203,17 @@ boolean HGetPacket(void)
 		return false;
 
 	if (doomcom->datalength != NetbufferSize()) {
-		if (debugfile)
-			fprintf(debugfile, "bad packet length %i\n",
-				doomcom->datalength);
+		SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+			     "bad packet length %i\n", doomcom->datalength);
 		return false;
 	}
 
 	if (NetbufferChecksum() != (netbuffer->checksum & NCMD_CHECKSUM)) {
-		if (debugfile)
-			fprintf(debugfile, "bad packet checksum\n");
+		SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+			     "bad packet checksum\n");
 		return false;
 	}
 
-	if (debugfile) {
-		int realretrans;
-		int i;
-
-		if (netbuffer->checksum & NCMD_SETUP)
-			fprintf(debugfile, "setup packet\n");
-		else {
-			if (netbuffer->checksum & NCMD_RETRANSMIT)
-				realretrans =
-					ExpandTics(netbuffer->retransmitfrom);
-			else
-				realretrans = -1;
-			fprintf(debugfile, "get %i = (%i + %i, R %i)[%i] ",
-				doomcom->remotenode,
-				ExpandTics(netbuffer->starttic),
-				netbuffer->numtics, realretrans,
-				doomcom->datalength);
-			for (i = 0; i < doomcom->datalength; i++)
-				fprintf(debugfile, "%i ",
-					((byte *)netbuffer)[i]);
-			fprintf(debugfile, "\n");
-		}
-	}
 	return true;
 }
 
@@ -293,13 +256,11 @@ void GetPackets(void)
 				continue;
 			nodeingame[netnode] = false;
 			playeringame[netconsole] = false;
-			strcpy(exitmsg, "PLAYER 1 LEFT THE GAME");
+			SDL_strlcpy(exitmsg, "PLAYER 1 LEFT THE GAME",
+				    sizeof(exitmsg));
 			exitmsg[7] += netconsole;
 			P_SetMessage(&players[consoleplayer], exitmsg, true);
 			S_StartSound(NULL, SFX_CHAT);
-			//			players[consoleplayer].message = exitmsg;
-			//                      if (demorecording)
-			//                              G_CheckDemoStatus ();
 			continue;
 		}
 
@@ -318,9 +279,9 @@ void GetPackets(void)
 		    (netbuffer->checksum & NCMD_RETRANSMIT)) {
 			resendto[netnode] =
 				ExpandTics(netbuffer->retransmitfrom);
-			if (debugfile)
-				fprintf(debugfile, "retransmit from %i\n",
-					resendto[netnode]);
+
+			SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+				     "retransmit from %i\n", resendto[netnode]);
 			resendcount[netnode] = RESENDCOUNT;
 		} else
 			resendcount[netnode]--;
@@ -332,10 +293,9 @@ void GetPackets(void)
 			continue;
 
 		if (realend < nettics[netnode]) {
-			if (debugfile)
-				fprintf(debugfile,
-					"out of order packet (%i + %i)\n",
-					realstart, netbuffer->numtics);
+			SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+				     "out of order packet (%i + %i)\n",
+				     realstart, netbuffer->numtics);
 			continue;
 		}
 
@@ -344,10 +304,10 @@ void GetPackets(void)
 		//
 		if (realstart > nettics[netnode]) {
 			// stop processing until the other system resends the missed tics
-			if (debugfile)
-				fprintf(debugfile,
-					"missed tics from %i (%i - %i)\n",
-					netnode, realstart, nettics[netnode]);
+
+			SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+				     "missed tics from %i (%i - %i)\n", netnode,
+				     realstart, nettics[netnode]);
 			remoteresend[netnode] = true;
 			continue;
 		}
@@ -711,9 +671,6 @@ void D_QuitNetGame(void)
 {
 	int i, j;
 
-	if (debugfile)
-		fclose(debugfile);
-
 	if (!netgame || !usergame || consoleplayer == -1 || demoplayback)
 		return;
 
@@ -786,10 +743,6 @@ void TryRunTics(void)
 		counts = 1;
 
 	frameon++;
-
-	if (debugfile)
-		fprintf(debugfile, "=======real: %i  avail: %i  game: %i\n",
-			realtics, availabletics, counts);
 
 	if (!demoplayback) {
 		//=============================================================================

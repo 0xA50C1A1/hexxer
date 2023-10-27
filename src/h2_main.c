@@ -12,6 +12,7 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include <SDL2/SDL_stdinc.h>
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,7 +96,6 @@ int startepisode;
 int startmap;
 boolean autostart;
 boolean advancedemo;
-FILE *debugfile;
 event_t events[MAXEVENTS];
 int eventhead;
 int eventtail;
@@ -341,7 +341,7 @@ static void ExecOptionPLAYDEMO(char **args, int tag)
 {
 	char file[256];
 
-	sprintf(file, "%s.lmp", args[1]);
+	snprintf(file, sizeof(file), "%s.lmp", args[1]);
 	AddWADFile(file);
 	ST_Message("Playing demo %s.lmp.\n", args[1]);
 }
@@ -381,11 +381,6 @@ long superatol(char *s)
 
 void H2_GameLoop(void)
 {
-	if (M_CheckParm("-debugfile")) {
-		char filename[20];
-		sprintf(filename, "debug%i.txt", consoleplayer);
-		debugfile = fopen(filename, "w");
-	}
 	I_InitGraphics();
 	while (1) {
 		// Frame syncronous IO operations
@@ -686,7 +681,7 @@ static void AddWADFile(char *file)
 		i++;
 	}
 	new = malloc(strlen(file) + 1);
-	strcpy(new, file);
+	SDL_strlcpy(new, file, sizeof(new));
 	wadfiles[i] = new;
 }
 

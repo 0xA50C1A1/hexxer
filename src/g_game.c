@@ -10,9 +10,10 @@
 //**
 //**************************************************************************
 
+#include <SDL2/SDL_stdinc.h>
 #include <string.h>
-#include "h2def.h"
-#include "p_local.h"
+#include <h2def.h>
+#include <p_local.h>
 #include <s_sound.h>
 #include <i_system.h>
 #include <m_random.h>
@@ -771,11 +772,15 @@ void G_Ticker(void)
 				case BTS_SAVEGAME:
 					if (!savedescription[0]) {
 						if (netgame) {
-							strcpy(savedescription,
-							       "NET GAME");
+							SDL_strlcpy(
+								savedescription,
+								"NET GAME",
+								sizeof(savedescription));
 						} else {
-							strcpy(savedescription,
-							       "SAVE GAME");
+							SDL_strlcpy(
+								savedescription,
+								"SAVE GAME",
+								sizeof(savedescription));
 						}
 					}
 					savegameslot = (players[i].cmd.buttons &
@@ -1305,7 +1310,7 @@ void G_DoLoadGame(void)
 void G_SaveGame(int slot, char *description)
 {
 	savegameslot = slot;
-	strcpy(savedescription, description);
+	SDL_strlcpy(savedescription, description, sizeof(savedescription));
 	sendsave = true;
 }
 
@@ -1471,8 +1476,8 @@ void G_RecordDemo(skill_t skill, int numplayers, int episode, int map,
 
 	G_InitNew(skill, episode, map);
 	usergame = false;
-	strcpy(demoname, name);
-	strcat(demoname, ".lmp");
+	SDL_strlcpy(demoname, name, sizeof(demoname));
+	SDL_strlcat(demoname, ".lmp", sizeof(demoname));
 	demobuffer = demo_p = Z_Malloc(0x20000, PU_STATIC, NULL);
 	*demo_p++ = skill;
 	*demo_p++ = episode;

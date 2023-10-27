@@ -10,9 +10,10 @@
 //**
 //**************************************************************************
 
-#include "h2def.h"
-#include "r_local.h"
-#include "p_local.h"
+#include <SDL2/SDL_stdinc.h>
+#include <h2def.h>
+#include <r_local.h>
+#include <p_local.h>
 #include <i_system.h>
 
 typedef struct {
@@ -193,7 +194,7 @@ void R_GenerateLookup(int texnum)
 	// fill in the lump / offset, so columns with only a single patch are
 	// all done
 	//
-	patchcount = (byte *)alloca(texture->width);
+	patchcount = (byte *)Z_Malloc(texture->width, PU_STATIC, &patchcount);
 	memset(patchcount, 0, texture->width);
 	patch = texture->patches;
 
@@ -233,6 +234,8 @@ void R_GenerateLookup(int texnum)
 			texturecompositesize[texnum] += texture->height;
 		}
 	}
+
+	Z_Free(patchcount);
 }
 
 /*
@@ -290,9 +293,10 @@ void R_InitTextures(void)
 	names = W_CacheLumpName("PNAMES", PU_STATIC);
 	nummappatches = LONG(*((int *)names));
 	name_p = names + 4;
-	patchlookup = alloca(nummappatches * sizeof(*patchlookup));
+	patchlookup =
+		Z_Malloc(nummappatches * sizeof(*patchlookup), PU_STATIC, NULL);
 	for (i = 0; i < nummappatches; i++) {
-		strncpy(name, name_p + i * 8, 8);
+		SDL_strlcpy(name, name_p + i * 8, sizeof(name));
 		patchlookup[i] = W_CheckNumForName(name);
 	}
 	Z_Free(names);
@@ -375,7 +379,9 @@ void R_InitTextures(void)
 		totalwidth += texture->width;
 	}
 
+	Z_Free(patchlookup);
 	Z_Free(maptex1);
+
 	if (maptex2)
 		Z_Free(maptex2);
 
@@ -578,7 +584,7 @@ void R_PrecacheLevel(void)
 	//
 	// precache flats
 	//
-	flatpresent = alloca(numflats);
+	flatpresent = Z_Malloc(numflats, PU_STATIC, NULL);
 	memset(flatpresent, 0, numflats);
 	for (i = 0; i < numsectors; i++) {
 		flatpresent[sectors[i].floorpic] = 1;
@@ -593,10 +599,12 @@ void R_PrecacheLevel(void)
 			W_CacheLumpNum(lump, PU_CACHE);
 		}
 
+	Z_Free(flatpresent);
+
 	//
 	// precache textures
 	//
-	texturepresent = alloca(numtextures);
+	texturepresent = Z_Malloc(numtextures, PU_STATIC, NULL);
 	memset(texturepresent, 0, numtextures);
 
 	for (i = 0; i < numsides; i++) {
@@ -620,10 +628,12 @@ void R_PrecacheLevel(void)
 		}
 	}
 
+	Z_Free(texturepresent);
+
 	//
 	// precache sprites
 	//
-	spritepresent = alloca(numsprites);
+	spritepresent = Z_Malloc(numsprites, PU_STATIC, NULL);
 	memset(spritepresent, 0, numsprites);
 
 	for (th = thinkercap.next; th != &thinkercap; th = th->next) {
@@ -644,4 +654,6 @@ void R_PrecacheLevel(void)
 			}
 		}
 	}
+
+	Z_Free(spritepresent);
 }
